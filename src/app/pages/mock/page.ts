@@ -2,7 +2,7 @@ import { EntryPreview } from '../models/models';
 
 export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
   {
-    id: '1',
+    id: '01J2C4J6Y0Q7W8Z9A1B2C3D4E5',
     createdAt: '2025-01-10T09:12:00Z',
     snippet: 'Giornata produttiva, ma con una leggera sensazione di tensione.',
     hasAnalysis: true,
@@ -16,7 +16,7 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '2',
+    id: '01J2E8T4P1M3N5Q7R9S1T3V5X7',
     createdAt: '2025-01-11T18:45:00Z',
     snippet: 'Stanchezza mentale e poca concentrazione nel pomeriggio.',
     hasAnalysis: true,
@@ -30,7 +30,7 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '3',
+    id: '01J2G2K0D2E4F6H8J0K2M4N6P8',
     createdAt: '2025-01-12T07:30:00Z',
     snippet: 'Risveglio sereno, obiettivi chiari per la giornata.',
     hasAnalysis: true,
@@ -44,13 +44,13 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '4',
+    id: '01J2H7W9R3S5T7V9X1Y3Z5A7C9',
     createdAt: '2025-01-13T22:10:00Z',
     snippet: 'Molti pensieri sparsi, difficile tirare le somme.',
     hasAnalysis: false,
   },
   {
-    id: '5',
+    id: '01J2J1B5K4M6N8P0Q2R4S6T8V0',
     createdAt: '2025-01-14T13:05:00Z',
     snippet: 'Buona energia ma emotivamente neutro.',
     hasAnalysis: true,
@@ -64,13 +64,13 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '6',
+    id: '01J2KDN1Y5Z7A9C1D3E5F7H9J1',
     createdAt: '2025-01-15T08:00:00Z',
     snippet: 'Giornata iniziata di corsa, senza una vera direzione.',
     hasAnalysis: false,
   },
   {
-    id: '7',
+    id: '01J2M0Q7P6R8S0T2V4X6Y8Z0A2',
     createdAt: '2025-01-16T19:40:00Z',
     snippet: 'Senso di chiusura positiva su alcune questioni aperte.',
     hasAnalysis: true,
@@ -84,7 +84,7 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '8',
+    id: '01J2NCV3D7E9F1H3J5K7M9N1P3',
     createdAt: '2025-01-17T23:15:00Z',
     snippet: 'Confusione emotiva, ma consapevolezza in crescita.',
     hasAnalysis: true,
@@ -98,13 +98,13 @@ export const ENTRY_PREVIEW_MOCK: EntryPreview[] = [
     },
   },
   {
-    id: '9',
+    id: '01J2P6H9R8S0T2V4X6Y8Z0A2C4',
     createdAt: '2025-01-18T11:25:00Z',
     snippet: 'Mattinata tranquilla, poche distrazioni.',
     hasAnalysis: false,
   },
   {
-    id: '10',
+    id: '01J2QK2M5N7P9Q1R3S5T7V9X1Y',
     createdAt: '2025-01-19T16:00:00Z',
     snippet: 'Buon equilibrio tra focus e rilassatezza.',
     hasAnalysis: true,

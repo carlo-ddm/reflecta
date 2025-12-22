@@ -138,4 +138,27 @@
     </footer>
   </div>
 </section>
+} @if (snackbar()?.snackbarIsOpen) {
+<app-snackbar>
+  <div snackbarTitle>
+    <h1>{{ snackbar()?.snackbarTitle }}</h1>
+  </div>
+  <div snackbarMessage>
+    <p>{{ snackbar()?.snackbarMessage }}</p>
+  </div>
+  <div snackbarAction>
+    <button class="btn btn--primary" type="button">
+      <span>
+        {{ snackbar()?.snackbarAction }}
+      </span>
+    </button>
+  </div>
+  <div snackbarDismiss>
+    <button class="snackbar__btn snackbar__btn--ghost" type="button">
+      <span>
+        {{ snackbar()?.snackbarDismiss }}
+      </span>
+    </button>
+  </div>
+</app-snackbar>
 }

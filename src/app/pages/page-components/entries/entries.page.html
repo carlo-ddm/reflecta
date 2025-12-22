@@ -1,0 +1,28 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Entries</h1>
+    <p class="page__subtitle">Lista degli scritti salvati (fake data / in-memory).</p>
+  </header>
+
+  <div class="page__body">
+    <section class="entries" aria-label="Lista entries">
+      <header class="entries__header">
+        <h2 class="entries__heading">I tuoi scritti</h2>
+        <p class="entries__meta">Apri un elemento per leggere il dettaglio.</p>
+      </header>
+
+      <!-- Stato empty (placeholder): rendilo visibile quando la lista è vuota -->
+      <div class="entries-empty" role="note" hidden>
+        <div class="entries-empty__title">Ancora nessuna entry</div>
+        <div class="entries-empty__text">Scrivi la prima entry e poi torna qui.</div>
+        <a class="entries-empty__cta" href="/write">Vai a Write</a>
+      </div>
+
+      <ul class="entries-list" aria-label="Entries" role="list">
+        @for (ep of entryPreviewList(); track $index) {
+        <app-entry-card [entry]="ep" />
+        }
+      </ul>
+    </section>
+  </div>
+</section>

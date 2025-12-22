@@ -1,0 +1,156 @@
+:host {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  justify-items: center;
+  padding-inline: 1rem;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.snackbar {
+  pointer-events: auto;
+  width: min(520px, 100%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface-1) 90%, var(--app-bg));
+  border: 1px solid var(--border-1);
+  box-shadow: var(--shadow-md);
+  padding: 0.6rem 0.65rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icon content"
+    "actions actions";
+  align-items: start;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.95rem;
+  animation: snackbar-in 180ms ease-out both;
+}
+
+.snackbar__icon {
+  grid-area: icon;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--brand-1) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-1) 22%, var(--border-1));
+  font-weight: 800;
+  font-size: 0.95rem;
+  flex: none;
+}
+
+.snackbar__content {
+  grid-area: content;
+  flex: 1 1 14rem;
+  min-width: 12rem;
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.1rem;
+}
+
+.snackbar__title {
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  font-size: 0.95rem;
+}
+
+.snackbar__message {
+  opacity: 0.72;
+  line-height: 1.35;
+  font-size: 0.9rem;
+}
+
+.snackbar__actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding-top: 0.1rem;
+  margin-top: -0.2rem;
+  padding-right: 0.2rem;
+}
+
+:host ::ng-deep .snackbar__actions button,
+:host ::ng-deep .snackbar__actions [role='button'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  appearance: none;
+  border: 1px solid var(--border-1);
+  background: color-mix(in srgb, var(--surface-1) 92%, var(--app-bg));
+  color: inherit;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  min-height: 2rem;
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+  line-height: 1.1;
+}
+
+:host ::ng-deep .snackbar__actions button:hover,
+:host ::ng-deep .snackbar__actions [role='button']:hover {
+  background: color-mix(in srgb, var(--brand-1) 6%, var(--surface-1));
+  border-color: color-mix(in srgb, var(--brand-1) 18%, var(--border-1));
+}
+
+:host ::ng-deep .snackbar__actions button:active,
+:host ::ng-deep .snackbar__actions [role='button']:active {
+  transform: translateY(1px);
+}
+
+:host ::ng-deep .snackbar__actions button:focus-visible,
+:host ::ng-deep .snackbar__actions [role='button']:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
+  outline-offset: 3px;
+}
+
+:host ::ng-deep .snackbar__actions :is(button[snackbarAction], [snackbarAction] button) {
+  border-color: color-mix(in srgb, var(--brand-1) 35%, var(--border-1));
+  background: color-mix(in srgb, var(--brand-1) 12%, var(--surface-1));
+  color: var(--brand-1);
+  box-shadow: none;
+}
+
+:host ::ng-deep .snackbar__actions :is(button[snackbarDismiss], [snackbarDismiss] button) {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--border-1) 45%, transparent);
+  opacity: 0.75;
+  padding-inline: 0.5rem;
+}
+
+:host ::ng-deep .snackbar__actions :is(button[snackbarDismiss], [snackbarDismiss] button):hover {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--brand-1) 16%, var(--border-1));
+  background: color-mix(in srgb, var(--brand-1) 6%, transparent);
+}
+
+:host ::ng-deep .snackbar__actions button > .btn {
+  all: unset;
+  display: contents;
+}
+
+@keyframes snackbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

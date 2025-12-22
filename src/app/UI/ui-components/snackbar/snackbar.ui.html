@@ -1,0 +1,17 @@
+<div class="snackbar" role="status" aria-live="polite" aria-atomic="true">
+  <div class="snackbar__icon" aria-hidden="true">✓</div>
+
+  <div class="snackbar__content">
+    <div class="snackbar__title">
+      <ng-content select="[snackbarTitle]"></ng-content>
+    </div>
+    <div class="snackbar__message">
+      <ng-content select="[snackbarMessage]"></ng-content>
+    </div>
+  </div>
+
+  <div class="snackbar__actions" aria-label="Azioni">
+    <ng-content select="[snackbarAction]"></ng-content>
+    <ng-content select="[snackbarDismiss]"></ng-content>
+  </div>
+</div>

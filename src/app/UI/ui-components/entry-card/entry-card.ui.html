@@ -1,0 +1,15 @@
+<li class="entries-list__item">
+  <a class="entry-card" href="/entries/1">
+    <div class="entry-card__top">
+      <time class="entry-card__date" [attr.datetime]="entry().createdAt">{{
+        entry().createdAt | date : 'longDate'
+      }}</time>
+      <span class="entry-card__badge entry-card__badge--analysis">{{
+        entry().hasAnalysis ? 'Anilisi' : 'Senza Analisi'
+      }}</span>
+    </div>
+    <p class="entry-card__snippet">
+      {{ entry().snippet }}
+    </p>
+  </a>
+</li>

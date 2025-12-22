@@ -1,5 +1,5 @@
 export interface EntryPreview {
-  id: string;
+  id: string | null;
   createdAt: string; // ISO
   snippet: string;
   hasAnalysis: boolean;
