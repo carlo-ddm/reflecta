@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  min-height: 100svh;
+  background: var(--app-bg);
+  color: var(--app-fg);
+}
+
+.app-shell {
+  min-height: inherit;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.app-shell__container {
+  width: min(var(--container-width), 100% - 2rem);
+  margin-inline: auto;
+}
+
+.app-shell__skip {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  inset-block-start: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  color: var(--app-fg);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-200%);
+  transition: transform 120ms ease;
+  z-index: 2;
+}
+
+.app-shell__skip:focus {
+  transform: translateY(0);
+}
+
+.app-shell__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: color-mix(in srgb, var(--app-bg) 85%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-1);
+}
+
+.app-shell__header .app-shell__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+}
+
+.app-shell__brand {
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.app-shell__brand:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.app-shell__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.app-shell__nav-link,
+.app-shell__nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  color: var(--app-fg);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.app-shell__nav-link:hover,
+.app-shell__nav a:hover {
+  background: color-mix(in srgb, var(--brand-1) 6%, var(--surface-1));
+  border-color: color-mix(in srgb, var(--brand-1) 16%, transparent);
+}
+
+.app-shell__nav-link:focus-visible,
+.app-shell__nav a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.app-shell__main {
+  padding-block: 1.25rem 2.5rem;
+}
+
+.app-shell__content {
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  box-shadow: var(--shadow-md);
+  min-height: min(70svh, 56rem);
+}
+
+@media (max-width: 520px) {
+  .app-shell__header .app-shell__container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .app-shell__content {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,44 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page__header {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.page__title {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.page__subtitle {
+  margin: 0;
+  max-width: 72ch;
+  opacity: 0.78;
+}
+
+.page__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.placeholder {
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--border-1) 85%, transparent);
+  background: color-mix(in srgb, var(--surface-1) 85%, var(--app-bg));
+}
+
+.placeholder__title {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.placeholder__text {
+  margin-top: 0.35rem;
+  opacity: 0.75;
+}

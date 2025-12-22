@@ -1,0 +1,141 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Write</h1>
+    <p class="page__subtitle">Scrivi liberamente. L’analisi è solo su richiesta.</p>
+  </header>
+
+  <div class="page__body">
+    <form
+      class="editor"
+      aria-label="Editor di scrittura"
+      novalidate
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="editor__surface">
+        <label class="editor__label" for="entry-text">Testo</label>
+        <textarea
+          class="editor__textarea"
+          id="entry-text"
+          name="entry-text"
+          placeholder="Scrivi liberamente…"
+          autocomplete="off"
+          autocapitalize="sentences"
+          spellcheck="true"
+          formControlName="entry-text"
+        ></textarea>
+      </div>
+
+      <div class="editor__actions" aria-label="Azioni (placeholder)">
+        <!-- TODO: Togliere direttiva disabled in base a validazione form -->
+        <button
+          class="editor__submit editor__submit--analysis"
+          type="button"
+          (click)="onAnalysisButtonClick(true)"
+        >
+          Analizza
+        </button>
+        <button class="editor__submit" type="submit" disabled>Invia</button>
+      </div>
+
+      <p class="editor__hint">
+        Scrittura libera. Nessun giudizio automatico. L’analisi è solo su richiesta.
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- Modal (placeholder): rendila visibile rimuovendo `hidden` -->
+@if (isAnalysisDialogOpen()) {
+<section class="analysis-modal" aria-label="Analisi">
+  <div class="analysis-modal__backdrop" aria-hidden="true"></div>
+
+  <div
+    class="analysis-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="analysis-title"
+  >
+    <header class="analysis-modal__header">
+      <div class="analysis-modal__title-wrap">
+        <h2 class="analysis-modal__title" id="analysis-title">Analisi (checkpoint)</h2>
+        <p class="analysis-modal__subtitle">Valori fake: solo una preview prima di salvare.</p>
+      </div>
+
+      <button
+        class="analysis-modal__close"
+        type="button"
+        aria-label="Chiudi"
+        (click)="onAnalysisButtonClick(false)"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <div class="analysis-modal__content">
+      <section class="analysis-profile" aria-label="Profilo">
+        <div class="analysis-profile__grid" role="list">
+          <div class="analysis-metric" role="listitem">
+            <div class="analysis-metric__label">Energy</div>
+            <div class="analysis-metric__value">—</div>
+            <div class="analysis-metric__bar" aria-hidden="true">
+              <span style="--pct: 40%"></span>
+            </div>
+          </div>
+          <div class="analysis-metric" role="listitem">
+            <div class="analysis-metric__label">Valence</div>
+            <div class="analysis-metric__value">—</div>
+            <div class="analysis-metric__bar" aria-hidden="true">
+              <span style="--pct: 55%"></span>
+            </div>
+          </div>
+          <div class="analysis-metric" role="listitem">
+            <div class="analysis-metric__label">Clarity</div>
+            <div class="analysis-metric__value">—</div>
+            <div class="analysis-metric__bar" aria-hidden="true">
+              <span style="--pct: 62%"></span>
+            </div>
+          </div>
+          <div class="analysis-metric" role="listitem">
+            <div class="analysis-metric__label">Tension</div>
+            <div class="analysis-metric__value">—</div>
+            <div class="analysis-metric__bar" aria-hidden="true">
+              <span style="--pct: 28%"></span>
+            </div>
+          </div>
+          <div class="analysis-metric" role="listitem">
+            <div class="analysis-metric__label">Time orientation</div>
+            <div class="analysis-metric__value">—</div>
+            <div class="analysis-metric__bar" aria-hidden="true">
+              <span style="--pct: 47%"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analysis-chart" aria-label="Grafico (placeholder)">
+          <div class="analysis-chart__frame" aria-hidden="true">
+            <div class="analysis-chart__ring"></div>
+            <div class="analysis-chart__ring"></div>
+            <div class="analysis-chart__ring"></div>
+            <div class="analysis-chart__dot"></div>
+          </div>
+          <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
+        </div>
+      </section>
+    </div>
+
+    <footer class="analysis-modal__footer" aria-label="Azioni">
+      <button class="analysis-modal__btn" type="button" (click)="onAnalysisButtonClick(false)">
+        Annulla
+      </button>
+      <button
+        class="analysis-modal__btn analysis-modal__btn--primary"
+        type="button"
+        (click)="onSubmitAnalysis()"
+      >
+        Salva
+      </button>
+    </footer>
+  </div>
+</section>
+}
