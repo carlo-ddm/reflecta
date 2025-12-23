@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { EntriesPage } from './entries.page';
 
@@ -8,12 +9,14 @@ describe('EntriesPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EntriesPage]
+      imports: [EntriesPage],
+      providers: [provideRouter([])],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(EntriesPage);
     component = fixture.componentInstance;
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 

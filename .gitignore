@@ -50,7 +50,7 @@ lerna-debug.log*
 .history/*
 
 # Angular cache
-.angular/cache/
+**/.angular/cache/
 
 # Miscellaneous
 .sass-cache/
