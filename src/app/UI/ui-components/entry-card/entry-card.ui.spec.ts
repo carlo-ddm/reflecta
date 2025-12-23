@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EntryCardUi } from './entry-card.ui';
+import { EntryCard } from './entry-card.ui';
 
-describe('EntryCardUi', () => {
-  let component: EntryCardUi;
-  let fixture: ComponentFixture<EntryCardUi>;
+describe('EntryCard', () => {
+  let component: EntryCard;
+  let fixture: ComponentFixture<EntryCard>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EntryCardUi]
-    })
-    .compileComponents();
+      imports: [EntryCard],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(EntryCardUi);
+    fixture = TestBed.createComponent(EntryCard);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
