@@ -2,8 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageService } from '../../services/page.service';
 import { EntryPreview } from '../../models/models';
-import { Snackbar } from '../../../UI/ui-components/snackbar/snackbar.ui';
-import { SnackbarData } from '../../../UI/models/models';
+import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
+import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
 
 @Component({

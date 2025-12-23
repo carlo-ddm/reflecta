@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { PageService } from '../../services/page.service';
-import { EntryCard } from '../../../UI/ui-components/entry-card/entry-card.ui';
+import { EntryCard } from '../../../ui/ui-components/entry-card/entry-card.ui';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-entries',
-  imports: [EntryCard],
+  imports: [EntryCard, RouterLink],
   templateUrl: './entries.page.html',
   styleUrl: './entries.page.scss',
 })

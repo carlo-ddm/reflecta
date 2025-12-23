@@ -5,9 +5,102 @@
   </header>
 
   <div class="page__body">
-    <div class="placeholder" role="note" aria-label="Placeholder entry detail">
-      <div class="placeholder__title">Dettaglio</div>
-      <div class="placeholder__text">Qui compariranno testo completo e sezione analysis.</div>
+    <div class="entry-detail__layout">
+      <article class="entry-detail" aria-label="Testo completo">
+        <header class="entry-detail__header">
+          <div class="entry-detail__meta">
+            <time class="entry-detail__date" datetime="2025-01-10T09:12:00Z">{{entry()?.createdAt | date : 'longDate'}}</time>
+            <span class="entry-detail__dot" aria-hidden="true"></span>
+          </div>
+          @if (entry()?.hasAnalysis) {
+          <span class="entry-detail__badge entry-detail__badge--analysis">Analisi presente</span>
+          } @else {
+          <span class="entry-detail__badge entry-detail__badge--empty" hidden>Analisi assente</span>
+          }
+        </header>
+
+        <div class="entry-detail__text">
+          <p>
+            {{entry()?.snippet}}
+          </p>
+        </div>
+      </article>
+
+      <!-- Stato analysis: mostra questa sezione solo se l'analysis è presente -->
+      @if (entry()?.hasAnalysis) {
+      <section class="entry-analysis" aria-label="Analisi">
+        <header class="entry-analysis__header">
+          <h2 class="entry-analysis__title">Analisi</h2>
+          <p class="entry-analysis__subtitle">Preview dei valori (fake data).</p>
+        </header>
+
+        <div class="analysis-profile" aria-label="Profilo di analisi">
+          <div class="analysis-profile__grid" role="list">
+            <div class="analysis-metric" role="listitem">
+              <div class="analysis-metric__label">Energy</div>
+              <div class="analysis-metric__value">78</div>
+              <div class="analysis-metric__bar" aria-hidden="true">
+                <span style="--pct: 78%"></span>
+              </div>
+            </div>
+            <div class="analysis-metric" role="listitem">
+              <div class="analysis-metric__label">Valence</div>
+              <div class="analysis-metric__value">62</div>
+              <div class="analysis-metric__bar" aria-hidden="true">
+                <span style="--pct: 62%"></span>
+              </div>
+            </div>
+            <div class="analysis-metric" role="listitem">
+              <div class="analysis-metric__label">Clarity</div>
+              <div class="analysis-metric__value">70</div>
+              <div class="analysis-metric__bar" aria-hidden="true">
+                <span style="--pct: 70%"></span>
+              </div>
+            </div>
+            <div class="analysis-metric" role="listitem">
+              <div class="analysis-metric__label">Tension</div>
+              <div class="analysis-metric__value">55</div>
+              <div class="analysis-metric__bar" aria-hidden="true">
+                <span style="--pct: 55%"></span>
+              </div>
+            </div>
+            <div class="analysis-metric" role="listitem">
+              <div class="analysis-metric__label">Time orientation</div>
+              <div class="analysis-metric__value">60</div>
+              <div class="analysis-metric__bar" aria-hidden="true">
+                <span style="--pct: 60%"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-chart" aria-label="Grafico (placeholder)">
+            <div class="analysis-chart__frame" aria-hidden="true">
+              <div class="analysis-chart__ring"></div>
+              <div class="analysis-chart__ring"></div>
+              <div class="analysis-chart__ring"></div>
+              <div class="analysis-chart__dot"></div>
+            </div>
+            <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
+          </div>
+        </div>
+      </section>
+
+      } @else {
+
+      <section
+        class="entry-analysis entry-analysis--empty"
+        aria-label="Analisi non disponibile"
+        hidden
+      >
+        <header class="entry-analysis__header">
+          <h2 class="entry-analysis__title">Analisi</h2>
+          <p class="entry-analysis__subtitle">Non presente per questa entry.</p>
+        </header>
+        <p class="entry-analysis__empty">
+          Questa entry è stata salvata senza analisi. Puoi richiederla solo in fase di scrittura.
+        </p>
+      </section>
+      }
     </div>
   </div>
 </section>

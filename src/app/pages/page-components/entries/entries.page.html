@@ -11,18 +11,25 @@
         <p class="entries__meta">Apri un elemento per leggere il dettaglio.</p>
       </header>
 
-      <!-- Stato empty (placeholder): rendilo visibile quando la lista è vuota -->
-      <div class="entries-empty" role="note" hidden>
-        <div class="entries-empty__title">Ancora nessuna entry</div>
-        <div class="entries-empty__text">Scrivi la prima entry e poi torna qui.</div>
-        <a class="entries-empty__cta" href="/write">Vai a Write</a>
-      </div>
+      <div class="entries__content">
+        @if (entryPreviewList().length > 0) {
+        <ul class="entries-list" aria-label="Entries" role="list">
+          @for (ep of entryPreviewList(); track $index) {
+          <app-entry-card [entry]="ep" [routerLink]="['/entries', ep.id]"></app-entry-card>
+          }
+        </ul>
 
-      <ul class="entries-list" aria-label="Entries" role="list">
-        @for (ep of entryPreviewList(); track $index) {
-        <app-entry-card [entry]="ep" />
+        } @else {
+        <div class="entries-empty" role="note">
+          <div class="entries-empty__content">
+            <div class="entries-empty__title">Ancora nessuna entry</div>
+            <div class="entries-empty__text">Scrivi la prima entry e poi torna qui.</div>
+            <a class="entries-empty__cta" routerLink="/">Vai a Write</a>
+          </div>
+        </div>
+
         }
-      </ul>
+      </div>
     </section>
   </div>
 </section>

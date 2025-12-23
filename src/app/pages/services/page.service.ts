@@ -13,6 +13,10 @@ export class PageService {
     return this.entry_preview_mock.asReadonly();
   }
 
+  getEntry(id: string) {
+    return this.entry_preview_mock().find((ep) => ep.id === id) ?? null;
+  }
+
   insertEntry(ep: EntryPreview) {
     const ulidId = ulid();
     const entryPreview = { ...ep, id: ulidId };

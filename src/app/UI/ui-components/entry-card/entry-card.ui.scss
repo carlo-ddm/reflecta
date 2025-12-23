@@ -10,6 +10,7 @@
   border: 1px solid var(--border-1);
   background: color-mix(in srgb, var(--surface-1) 92%, var(--app-bg));
   text-decoration: none;
+  cursor: pointer;
   transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
 }
 
