@@ -38,8 +38,7 @@ export class WritePage {
     const entryPreview: EntryPreview = {
       id: null,
       createdAt: '2025-02-03T21:18:00Z',
-      snippet:
-        'Serata di riflessione forzata: poche azioni, ma molta chiarezza su cosa evitare in futuro.',
+      snippet: this.form.get('entry-text')?.value ?? '', // to patch
       hasAnalysis: true,
       analysis: {
         energy: 44,
@@ -51,8 +50,10 @@ export class WritePage {
       },
     };
 
-    this.setAnalysisDialogOpen(false);
     this.pageService.insertEntry(entryPreview);
+    this.form.reset();
+
+    this.setAnalysisDialogOpen(false);
     this.snackbar.set({
       snackbarIsOpen: true,
       snackbarTitle: 'Salvato',

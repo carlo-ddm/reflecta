@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EntryPreview } from '../../models/models';
 import { PageService } from '../../services/page.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-entry-detail',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './entry-detail.page.html',
   styleUrl: './entry-detail.page.scss',
 })

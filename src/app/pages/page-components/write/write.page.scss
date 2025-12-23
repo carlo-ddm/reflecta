@@ -7,6 +7,8 @@
 .page__header {
   display: grid;
   gap: 0.4rem;
+  width: min(78ch, 100%);
+  margin-inline: auto;
 }
 
 .page__title {
