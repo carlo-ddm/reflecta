@@ -1,15 +1,36 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Build output (generated)
+dist/
+out-tsc/
+tmp/
+bazel-out/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Caches
+.eslintcache
+*.tsbuildinfo
+
+# Environment variables (local)
+.env
+.env.*
+!.env.example
+
+# Local databases (Prisma/SQLite)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
 
 # IDEs and editors
 .idea/
@@ -28,11 +49,13 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Angular cache
+.angular/cache/
+
 # Miscellaneous
-/.angular/cache
 .sass-cache/
 /connect.lock
-/coverage
+coverage/
 /libpeerconnection.log
 testem.log
 /typings
@@ -42,5 +65,9 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# OpenAi
-AGENTS.MD
+# Project meta
+AGENTS.md
+
+# Personal notes
+apps/api/note.md
+
