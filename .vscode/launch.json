@@ -15,6 +15,16 @@
       "request": "launch",
       "preLaunchTask": "npm: test",
       "url": "http://localhost:9876/debug.html"
+    },
+    {
+      "name": "api: attach",
+      "type": "node",
+      "request": "attach",
+      "address": "127.0.0.1",
+      "port": 9229,
+      "cwd": "${workspaceFolder}/apps/api",
+      "sourceMaps": true,
+      "restart": true
     }
   ]
 }
