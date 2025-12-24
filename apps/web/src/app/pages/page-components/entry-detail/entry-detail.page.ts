@@ -3,10 +3,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EntryPreview } from '../../models/models';
 import { PageService } from '../../services/page.service';
 import { DatePipe } from '@angular/common';
+import { Badge } from '../../../ui/ui-components/badge/badge.ui';
 
 @Component({
   selector: 'app-entry-detail',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, Badge],
   templateUrl: './entry-detail.page.html',
   styleUrl: './entry-detail.page.scss',
 })

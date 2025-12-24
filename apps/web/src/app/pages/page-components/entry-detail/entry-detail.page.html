@@ -12,19 +12,17 @@
       <article class="entry-detail" aria-label="Testo completo">
         <header class="entry-detail__header">
           <div class="entry-detail__meta">
-            <time class="entry-detail__date" datetime="2025-01-10T09:12:00Z">{{entry()?.createdAt | date : 'longDate'}}</time>
+            <time class="entry-detail__date" datetime="2025-01-10T09:12:00Z">{{
+              entry()?.createdAt | date : 'longDate'
+            }}</time>
             <span class="entry-detail__dot" aria-hidden="true"></span>
           </div>
-          @if (entry()?.hasAnalysis) {
-          <span class="entry-detail__badge entry-detail__badge--analysis">Analisi presente</span>
-          } @else {
-          <span class="entry-detail__badge entry-detail__badge--empty" hidden>Analisi assente</span>
-          }
+          <app-badge [hasAnalysis]="entry()?.hasAnalysis" />
         </header>
 
         <div class="entry-detail__text">
           <p>
-            {{entry()?.snippet}}
+            {{ entry()?.snippet }}
           </p>
         </div>
       </article>

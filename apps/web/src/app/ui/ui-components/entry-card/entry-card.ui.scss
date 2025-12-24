@@ -37,24 +37,6 @@
   opacity: 0.8;
 }
 
-.entry-card__badge {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid var(--border-1);
-  background: color-mix(in srgb, var(--surface-1) 92%, var(--app-bg));
-  font-size: 0.82rem;
-  letter-spacing: -0.01em;
-  opacity: 0.9;
-}
-
-.entry-card__badge--analysis {
-  border-color: color-mix(in srgb, var(--brand-1) 26%, var(--border-1));
-  background: color-mix(in srgb, var(--brand-1) 10%, var(--surface-1));
-}
-
 .entry-card__snippet {
   margin: 0;
   max-width: 78ch;
