@@ -4,8 +4,10 @@ import { Component, input } from '@angular/core';
   selector: 'app-badge',
   imports: [],
   template: ` <span
-    class="entry-detail__badge"
-    [class]="hasAnalysis() ? 'entry-detail__badge--analysis' : 'entry-detail__badge--empty'"
+    [class]="[
+      'entry-detail__badge',
+      hasAnalysis() ? 'entry-detail__badge--analysis' : 'entry-detail__badge--empty'
+    ]"
     >{{ hasAnalysis() ? 'Analisi presente' : 'Analisi non presente' }}</span
   >`,
   styles: [
