@@ -17,14 +17,15 @@
       "url": "http://localhost:9876/debug.html"
     },
     {
-      "name": "api: attach",
+      "name": "api: debug",
       "type": "node",
-      "request": "attach",
-      "address": "127.0.0.1",
-      "port": 9229,
+      "request": "launch",
       "cwd": "${workspaceFolder}/apps/api",
-      "sourceMaps": true,
-      "restart": true
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:debug"],
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
     }
   ]
 }

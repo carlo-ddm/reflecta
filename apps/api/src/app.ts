@@ -1,8 +1,8 @@
 import * as http from 'node:http';
 
 const server = http.createServer((req, res) => {
-  console.log('Hello world!', req);
+const greetings = 'Hello world!';
+console.log(greetings)
 });
 
-server.listen(3000)
-
+server.listen(3000);
