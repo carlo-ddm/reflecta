@@ -17,12 +17,6 @@
   letter-spacing: -0.02em;
 }
 
-.page__subtitle {
-  margin: 0;
-  max-width: 72ch;
-  opacity: 0.78;
-}
-
 .page__body {
   display: grid;
   gap: 1rem;
@@ -83,52 +77,4 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-}
-
-.editor__submit {
-  cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
-  appearance: none;
-  border: 1px solid color-mix(in srgb, var(--brand-1) 22%, var(--border-1));
-  background: color-mix(in srgb, var(--brand-1) 6%, var(--surface-1));
-  color: inherit;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  font: inherit;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-}
-
-.editor__submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.editor__submit:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
-  outline-offset: 3px;
-}
-
-.editor__submit:not(:disabled):hover {
-  background: color-mix(in srgb, var(--brand-1) 10%, var(--surface-1));
-  border-color: color-mix(in srgb, var(--brand-1) 30%, var(--border-1));
-}
-
-.editor__submit:not(:disabled):active {
-  transform: translateY(1px);
-}
-
-.editor__submit--analysis {
-  background: transparent;
-  border-color: color-mix(in srgb, var(--brand-1) 26%, var(--border-1));
-}
-
-.editor__submit--analysis:not(:disabled):hover {
-  background: color-mix(in srgb, var(--brand-1) 6%, transparent);
-}
-
-.editor__hint {
-  margin: 0;
-  font-size: 0.92rem;
-  opacity: 0.78;
 }

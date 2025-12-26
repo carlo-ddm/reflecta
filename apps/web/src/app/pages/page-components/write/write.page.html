@@ -1,7 +1,6 @@
 <section class="page">
   <header class="page__header">
-    <h1 class="page__title">Write</h1>
-    <p class="page__subtitle">Scrivi liberamente. L’analisi è solo su richiesta.</p>
+    <h1 class="page__title">Scrivi</h1>
   </header>
 
   <div class="page__body">
@@ -27,25 +26,16 @@
       </div>
 
       <div class="editor__actions" aria-label="Azioni (placeholder)">
-        <!-- TODO: Togliere direttiva disabled in base a validazione form -->
-        <button
-          class="editor__submit editor__submit--analysis"
-          type="button"
-          (click)="onAnalysisButtonClick(true)"
-        >
-          Analizza
-        </button>
-        <button class="editor__submit" type="submit" disabled>Invia</button>
+        <app-button
+          [config]="{ type: 'button', text: 'Analizza', variant: 'secondary' }"
+          (clicked)="onAnalysisButtonClick(true)"
+        />
+        <app-button [config]="{ type: 'submit', text: 'Invia' }" />
       </div>
-
-      <p class="editor__hint">
-        Scrittura libera. Nessun giudizio automatico. L’analisi è solo su richiesta.
-      </p>
     </form>
   </div>
 </section>
 
-<!-- Modal (placeholder): rendila visibile rimuovendo `hidden` -->
 @if (isAnalysisDialogOpen()) {
 <section class="analysis-modal" aria-label="Analisi">
   <div class="analysis-modal__backdrop" aria-hidden="true"></div>
@@ -62,14 +52,10 @@
         <p class="analysis-modal__subtitle">Valori fake: solo una preview prima di salvare.</p>
       </div>
 
-      <button
-        class="analysis-modal__close"
-        type="button"
-        aria-label="Chiudi"
-        (click)="onAnalysisButtonClick(false)"
-      >
-        <span aria-hidden="true">×</span>
-      </button>
+      <app-button
+        [config]="{ text: 'Torna a scrivere', variant: 'secondary' }"
+        (clicked)="onAnalysisButtonClick(false)"
+      />
     </header>
 
     <div class="analysis-modal__content">

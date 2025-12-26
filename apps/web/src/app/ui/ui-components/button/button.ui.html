@@ -1,0 +1,8 @@
+<button
+  [class]="classes()"
+  [type]="type()"
+  [disabled]="config().disabled ?? false"
+  (click)="onClick()"
+>
+  {{ config().text }}
+</button>

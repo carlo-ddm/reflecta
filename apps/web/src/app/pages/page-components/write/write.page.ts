@@ -5,10 +5,11 @@ import { EntryPreview } from '../../models/models';
 import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
 import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
+import { ButtonUi } from '../../../ui/ui-components/button/button.ui';
 
 @Component({
   selector: 'app-write',
-  imports: [ReactiveFormsModule, Snackbar],
+  imports: [ReactiveFormsModule, Snackbar, ButtonUi],
   templateUrl: './write.page.html',
   styleUrl: './write.page.scss',
 })
@@ -65,6 +66,8 @@ export class WritePage {
   }
 
   onSubmitAnalysis() {
+    console.log('check');
+
     // TODO: recupero dell'analisi (analisi non presente)
     this.onSubmit();
   }

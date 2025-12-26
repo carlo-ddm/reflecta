@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+
+// You can add global styles to this file, and also import other style files
 
 :root {
   color-scheme: light;
@@ -112,27 +113,6 @@ a {
   margin: 0;
   opacity: 0.75;
   font-size: 0.92rem;
-}
-
-.analysis-modal__close {
-  cursor: pointer;
-  appearance: none;
-  border: 1px solid var(--border-1);
-  background: color-mix(in srgb, var(--surface-1) 92%, var(--app-bg));
-  color: inherit;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 1.35rem;
-  line-height: 1;
-  padding: 0;
-}
-
-.analysis-modal__close:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
-  outline-offset: 3px;
 }
 
 .analysis-modal__content {
