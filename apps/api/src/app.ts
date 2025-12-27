@@ -1,8 +1,11 @@
-import * as http from 'node:http';
+import http from 'http';
+import config from './config/config.js';
+import express from 'express';
 
-const server = http.createServer((req, res) => {
-const greetings = 'Hello world!';
-console.log(greetings)
+const app = express();
+
+const server = http.createServer(app);
+
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });
-
-server.listen(3000);
