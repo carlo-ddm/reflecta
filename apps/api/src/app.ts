@@ -1,11 +1,14 @@
-import http from 'http';
 import config from './config/config.js';
-import express from 'express';
+import express, { Application } from 'express';
 
-const app = express();
+// Routes
+import healthRouter from './routes/health.js';
 
-const server = http.createServer(app);
+const app: Application = express();
+const healthRoute = healthRouter;
 
-server.listen(config.port, () => {
-  console.log(`Server running on port ${config.port}`);
+app.use(healthRoute);
+
+app.listen(config.port, () => {
+  console.log(`API up — env: ${config.nodeEnv} — port: ${config.port} — health: http://localhost:${config.port}/health`);
 });
