@@ -3,9 +3,15 @@
     <mat-card class="entry-card__surface">
       <mat-card-content>
         <div class="entry-card__top">
-          <time class="entry-card__date" [attr.datetime]="entry().createdAt">
-            {{ entry().createdAt | date : 'longDate' }}
-          </time>
+          <div class="entry-card__meta">
+            <time class="entry-card__date" [attr.datetime]="entry().createdAt">
+              {{ entry().createdAt | date : 'longDate' }}
+            </time>
+            <span class="entry-card__separator" aria-hidden="true">-</span>
+            <time class="entry-card__time" [attr.datetime]="entry().createdAt">
+              {{ entry().createdAt | date : 'HH:mm' }}
+            </time>
+          </div>
           <app-badge [hasAnalysis]="entry().hasAnalysis" />
         </div>
         <p class="entry-card__snippet">{{ entry().snippet }}</p>

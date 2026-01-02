@@ -1,16 +1,11 @@
 <section class="page">
   <header class="page__header">
-    <h1 class="page__title">I tuoi scritti</h1>
-    <p class="page__subtitle">Raccolta personale delle entries salvate.</p>
+    <h1 class="page__title">Archivio</h1>
+    <p class="page__subtitle">Apri un elemento per leggere il dettaglio completo.</p>
   </header>
 
   <div class="page__body">
-    <section class="entries" aria-label="Lista entries">
-      <header class="entries__header">
-        <h2 class="entries__heading">Archivio</h2>
-        <p class="entries__meta">Apri un elemento per leggere il dettaglio completo.</p>
-      </header>
-
+    <section class="entries" aria-label="Lista entries">  
       <div class="entries__content">
         @if (isLoading()) {
         <mat-card class="entries-empty" role="status">

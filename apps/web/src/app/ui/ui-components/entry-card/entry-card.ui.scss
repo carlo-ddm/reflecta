@@ -26,9 +26,28 @@
   margin-bottom: var(--s-2);
 }
 
+.entry-card__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+.entry-card__separator {
+  color: var(--muted);
+  font-size: var(--fs-2);
+}
+
 .entry-card__date {
   font-size: var(--fs-2);
   color: var(--muted);
+}
+
+.entry-card__time {
+  font-size: var(--fs-2);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
 .entry-card__snippet {

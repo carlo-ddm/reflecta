@@ -1,7 +1,6 @@
 <section class="page">
   <header class="page__header">
     <div class="page__header-row">
-      <h1 class="page__title">Entry</h1>
       <div class="page__actions">
         <button
           mat-button
@@ -10,14 +9,13 @@
           (click)="openDeleteDialog()"
           [disabled]="isDeleting()"
         >
-          {{ isDeleting() ? 'Elimino...' : 'Elimina entry' }}
+          {{ isDeleting() ? 'Elimino...' : 'Elimina' }}
         </button>
         <a mat-button class="rf-button rf-button--tonal" routerLink="/entries">
           Torna alla lista dei tuoi scritti
         </a>
       </div>
     </div>
-    <p class="page__subtitle">Rilettura completa dello scritto, con analisi (se presente).</p>
   </header>
 
   <div class="page__body">
@@ -28,6 +26,10 @@
             <div class="entry-detail__meta">
               <time class="entry-detail__date" [attr.datetime]="entry()?.createdAt">
                 {{ entry()?.createdAt | date : 'longDate' }}
+              </time>
+              <span class="entry-detail__separator" aria-hidden="true">-</span>
+              <time class="entry-detail__time" [attr.datetime]="entry()?.createdAt">
+                {{ entry()?.createdAt | date : 'HH:mm' }}
               </time>
               <span class="entry-detail__dot" aria-hidden="true"></span>
             </div>
@@ -80,17 +82,6 @@
 
       } @else {
 
-      <mat-card class="entry-analysis entry-analysis--empty" aria-label="Analisi non disponibile">
-        <mat-card-content>
-          <header class="entry-analysis__header">
-            <h2 class="entry-analysis__title">Analisi</h2>
-            <p class="entry-analysis__subtitle">Non presente per questa entry.</p>
-          </header>
-          <p class="entry-analysis__empty">
-            Questa entry e stata salvata senza analisi. Puoi richiederla al momento della scrittura.
-          </p>
-        </mat-card-content>
-      </mat-card>
       }
     </div>
   </div>
