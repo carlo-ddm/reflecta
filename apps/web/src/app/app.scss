@@ -129,6 +129,10 @@
 }
 
 @media (min-width: 901px) {
+  .app-shell__toolbar {
+    display: none;
+  }
+
   .app-shell__menu {
     display: none;
   }
