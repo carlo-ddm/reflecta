@@ -1,59 +1,95 @@
 # Reflecta
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+Reflecta is a local‑first journaling app. You can save entries, request an analysis on demand, and keep everything on your own machine.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Write and save entries (immutable, deletable)
+- Analysis on explicit request (never automatic)
+- Local SQLite storage (no cloud by default)
+- Author ID stored locally in the browser
+- Angular Material 3 UI (calm‑tech, journal style)
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Frontend: Angular 21 + Angular Material (M3)
+- Backend: Node.js + Express
+- Database: Prisma + SQLite
 
-## Code scaffolding
+## Requirements
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 20+
+- npm
 
-```bash
-ng generate component component-name
-```
+## Quick Start (Local)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+1) Install dependencies
 
 ```bash
-ng build
+npm -C apps/api install
+npm -C apps/web install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+2) Configure the API environment
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Create `apps/api/.env`:
 
 ```bash
-ng test
+DATABASE_URL="file:./db.sqlite3"
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+3) Start API + Web together
 
 ```bash
-ng e2e
+node scripts/dev.mjs
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- API: http://localhost:3000
+- Web: http://localhost:4200
 
-## Additional Resources
+### Run separately
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm -C apps/api run dev
+npm -C apps/web start
+```
+
+## Author ID
+
+Reflecta uses a local Author ID to associate entries.
+
+Generate one with the seed command:
+
+```bash
+npm -C apps/api run db:seed
+```
+
+Copy the printed ID and save it in **Settings**.
+
+## Database
+
+- File: `apps/api/db.sqlite3`
+- Stored locally and ignored by git
+- To move to another PC: copy the DB file **and** reuse the same Author ID
+
+## API Endpoints (local)
+
+- `GET /health`
+- `GET /entries`
+- `GET /entries/:id`
+- `POST /entries`
+- `POST /analysis`
+- `DELETE /entries/:id`
+
+## Security Notes
+
+- Author ID is **not** authentication.
+- If the backend is exposed publicly, anyone with an Author ID could read data.
+- For safety, keep the app local unless you add real authentication.
+
+## Project Structure
+
+- `apps/api` — Express + Prisma API
+- `apps/web` — Angular UI
+- `scripts/dev.mjs` — start API + Web together
+
