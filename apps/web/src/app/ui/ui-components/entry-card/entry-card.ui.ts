@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { EntryPreview } from '../../../pages/models/models';
+import { EntryListItem } from '../../../pages/models/models';
 import { DatePipe } from '@angular/common';
 import { Badge } from '../badge/badge.ui';
 
@@ -10,5 +10,5 @@ import { Badge } from '../badge/badge.ui';
   styleUrl: './entry-card.ui.scss',
 })
 export class EntryCard {
-  entry = input.required<EntryPreview>();
+  entry = input.required<EntryListItem>();
 }

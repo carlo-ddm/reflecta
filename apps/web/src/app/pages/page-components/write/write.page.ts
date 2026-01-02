@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PageService } from '../../services/page.service';
-import { EntryPreview } from '../../models/models';
 import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
 import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
 import { ButtonUi } from '../../../ui/ui-components/button/button.ui';
+import { DEFAULT_AUTHOR_ID } from '../../../config/api.config';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-write',
@@ -36,40 +37,118 @@ export class WritePage {
       this.closeSnackbar();
     }
 
-    const entryPreview: EntryPreview = {
-      id: null,
-      createdAt: '2025-02-03T21:18:00Z',
-      snippet: this.form.get('entry-text')?.value ?? '', // to patch
-      hasAnalysis: true,
-      analysis: {
-        energy: 44,
-        valence: 52,
-        clarity: 86,
-        tension: 67,
-        timeOrientation: 41,
-        createdAt: '2025-02-03T21:25:00Z',
-      },
-    };
+    const rawContent = this.form.get('entry-text')?.value ?? '';
+    const content = String(rawContent).trim();
 
-    this.pageService.insertEntry(entryPreview);
-    this.form.reset();
+    if (!content) {
+      this.snackbar.set({
+        snackbarIsOpen: true,
+        snackbarTitle: 'Testo vuoto',
+        snackbarMessage: 'Scrivi qualcosa prima di salvare.',
+        snackbarAction: '',
+        snackbarDismiss: 'Chiudi',
+      });
+      return;
+    }
 
-    this.setAnalysisDialogOpen(false);
-    this.snackbar.set({
-      snackbarIsOpen: true,
-      snackbarTitle: 'Salvato',
-      snackbarMessage: 'Entry salvata in memoria.',
-      snackbarAction: 'Vai a Entries',
-      snackbarDismiss: 'Chiudi',
-    });
-    this.snackbarAction();
+    const authorId = DEFAULT_AUTHOR_ID.trim();
+
+    if (!authorId) {
+      this.snackbar.set({
+        snackbarIsOpen: true,
+        snackbarTitle: 'Configurazione mancante',
+        snackbarMessage: 'Imposta DEFAULT_AUTHOR_ID in api.config.ts.',
+        snackbarAction: '',
+        snackbarDismiss: 'Chiudi',
+      });
+      return;
+    }
+
+    firstValueFrom(
+      this.pageService.createEntry({
+        authorId,
+        content,
+      }),
+    )
+      .then(() => {
+        this.form.reset();
+        this.setAnalysisDialogOpen(false);
+        this.snackbar.set({
+          snackbarIsOpen: true,
+          snackbarTitle: 'Salvato',
+          snackbarMessage: 'Entry salvata con successo.',
+          snackbarAction: 'Vai a Entries',
+          snackbarDismiss: 'Chiudi',
+        });
+        this.snackbarAction();
+      })
+      .catch(() => {
+        this.snackbar.set({
+          snackbarIsOpen: true,
+          snackbarTitle: 'Errore',
+          snackbarMessage: 'Impossibile salvare l\'entry.',
+          snackbarAction: '',
+          snackbarDismiss: 'Chiudi',
+        });
+      });
   }
 
   onSubmitAnalysis() {
-    console.log('check');
+    const rawContent = this.form.get('entry-text')?.value ?? '';
+    const content = String(rawContent).trim();
 
-    // TODO: recupero dell'analisi (analisi non presente)
-    this.onSubmit();
+    if (!content) {
+      this.snackbar.set({
+        snackbarIsOpen: true,
+        snackbarTitle: 'Testo vuoto',
+        snackbarMessage: 'Scrivi qualcosa prima di analizzare.',
+        snackbarAction: '',
+        snackbarDismiss: 'Chiudi',
+      });
+      return;
+    }
+
+    const authorId = DEFAULT_AUTHOR_ID.trim();
+
+    if (!authorId) {
+      this.snackbar.set({
+        snackbarIsOpen: true,
+        snackbarTitle: 'Configurazione mancante',
+        snackbarMessage: 'Imposta DEFAULT_AUTHOR_ID in api.config.ts.',
+        snackbarAction: '',
+        snackbarDismiss: 'Chiudi',
+      });
+      return;
+    }
+
+    firstValueFrom(
+      this.pageService.createEntry({
+        authorId,
+        content,
+      }),
+    )
+      .then((entry) => firstValueFrom(this.pageService.requestAnalysis(entry.id)))
+      .then(() => {
+        this.form.reset();
+        this.setAnalysisDialogOpen(false);
+        this.snackbar.set({
+          snackbarIsOpen: true,
+          snackbarTitle: 'Analisi salvata',
+          snackbarMessage: 'Entry salvata con analisi.',
+          snackbarAction: 'Vai a Entries',
+          snackbarDismiss: 'Chiudi',
+        });
+        this.snackbarAction();
+      })
+      .catch(() => {
+        this.snackbar.set({
+          snackbarIsOpen: true,
+          snackbarTitle: 'Errore',
+          snackbarMessage: 'Impossibile completare l\'analisi.',
+          snackbarAction: '',
+          snackbarDismiss: 'Chiudi',
+        });
+      });
   }
 
   onCloseSnackbar(result: boolean) {

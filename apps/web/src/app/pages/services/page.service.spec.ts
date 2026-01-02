@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { PageService } from './page.service';
 
@@ -6,7 +7,9 @@ describe('PageService', () => {
   let service: PageService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideHttpClientTesting()],
+    });
     service = TestBed.inject(PageService);
   });
 

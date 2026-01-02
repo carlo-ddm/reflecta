@@ -7,6 +7,7 @@ export interface EntryListItemDto {
   authorId: string;
   createdAt: Date;
   snippet: string;
+  hasAnalysis: boolean;
 }
 
 export interface EntryDetailDto extends EntryListItemDto {
@@ -19,11 +20,13 @@ export const toEntryListItemDto = (entry: {
   authorId: string;
   createdAt: Date;
   snippet: string;
+  analysis?: { id: string } | null;
 }): EntryListItemDto => ({
   id: entry.id,
   authorId: entry.authorId,
   createdAt: entry.createdAt,
   snippet: entry.snippet,
+  hasAnalysis: Boolean(entry.analysis),
 });
 
 export const toEntryDetailDto = (entry: {
@@ -45,6 +48,7 @@ export const toEntryDetailDto = (entry: {
   authorId: entry.authorId,
   createdAt: entry.createdAt,
   snippet: entry.snippet,
+  hasAnalysis: Boolean(entry.analysis),
   content: entry.content,
   analysis: entry.analysis ? toAnalysisDto(entry.analysis) : null,
 });

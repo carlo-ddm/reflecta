@@ -1,7 +1,7 @@
 <section class="page">
   <header class="page__header">
     <h1 class="page__title">Entries</h1>
-    <p class="page__subtitle">Lista degli scritti salvati (fake data / in-memory).</p>
+    <p class="page__subtitle">Lista degli scritti salvati.</p>
   </header>
 
   <div class="page__body">
@@ -14,9 +14,9 @@
       <div class="entries__content">
         @if (entryPreviewList().length > 0) {
         <ul class="entries-list" aria-label="Entries" role="list">
-          @for (ep of entryPreviewList(); track $index) {
+        @for (ep of entryPreviewList(); track ep.id) {
           <app-entry-card [entry]="ep" [routerLink]="['/entries', ep.id]"></app-entry-card>
-          }
+        }
         </ul>
 
         } @else {

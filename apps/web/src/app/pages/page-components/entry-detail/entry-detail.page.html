@@ -12,65 +12,41 @@
       <article class="entry-detail" aria-label="Testo completo">
         <header class="entry-detail__header">
           <div class="entry-detail__meta">
-            <time class="entry-detail__date" datetime="2025-01-10T09:12:00Z">{{
+            <time class="entry-detail__date" [attr.datetime]="entry()?.createdAt">{{
               entry()?.createdAt | date : 'longDate'
             }}</time>
             <span class="entry-detail__dot" aria-hidden="true"></span>
           </div>
-          <app-badge [hasAnalysis]="entry()?.hasAnalysis" />
+          <app-badge [hasAnalysis]="hasAnalysis()" />
         </header>
 
         <div class="entry-detail__text">
           <p>
-            {{ entry()?.snippet }}
+            {{ entry()?.content || entry()?.snippet }}
           </p>
         </div>
       </article>
 
-      @if (entry()?.hasAnalysis) {
+      @if (hasAnalysis()) {
       <section class="entry-analysis" aria-label="Analisi">
         <header class="entry-analysis__header">
           <h2 class="entry-analysis__title">Analisi</h2>
-          <p class="entry-analysis__subtitle">Preview dei valori (fake data).</p>
+          <p class="entry-analysis__subtitle">Valori calcolati al momento del salvataggio.</p>
         </header>
 
         <div class="analysis-profile" aria-label="Profilo di analisi">
           <div class="analysis-profile__grid" role="list">
+            @for (metric of analysisMetrics(); track metric.key) {
             <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">Energy</div>
-              <div class="analysis-metric__value">78</div>
+              <div class="analysis-metric__label">{{ metric.label }}</div>
+              <div class="analysis-metric__value">
+                {{ metric.value === null ? '—' : metric.value }}
+              </div>
               <div class="analysis-metric__bar" aria-hidden="true">
-                <span style="--pct: 78%"></span>
+                <span [style.--pct]="metric.pct === null ? '0%' : metric.pct + '%'"></span>
               </div>
             </div>
-            <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">Valence</div>
-              <div class="analysis-metric__value">62</div>
-              <div class="analysis-metric__bar" aria-hidden="true">
-                <span style="--pct: 62%"></span>
-              </div>
-            </div>
-            <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">Clarity</div>
-              <div class="analysis-metric__value">70</div>
-              <div class="analysis-metric__bar" aria-hidden="true">
-                <span style="--pct: 70%"></span>
-              </div>
-            </div>
-            <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">Tension</div>
-              <div class="analysis-metric__value">55</div>
-              <div class="analysis-metric__bar" aria-hidden="true">
-                <span style="--pct: 55%"></span>
-              </div>
-            </div>
-            <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">Time orientation</div>
-              <div class="analysis-metric__value">60</div>
-              <div class="analysis-metric__bar" aria-hidden="true">
-                <span style="--pct: 60%"></span>
-              </div>
-            </div>
+            }
           </div>
 
           <div class="analysis-chart" aria-label="Grafico (placeholder)">
@@ -87,17 +63,13 @@
 
       } @else {
 
-      <section
-        class="entry-analysis entry-analysis--empty"
-        aria-label="Analisi non disponibile"
-        hidden
-      >
+      <section class="entry-analysis entry-analysis--empty" aria-label="Analisi non disponibile">
         <header class="entry-analysis__header">
           <h2 class="entry-analysis__title">Analisi</h2>
           <p class="entry-analysis__subtitle">Non presente per questa entry.</p>
         </header>
         <p class="entry-analysis__empty">
-          Questa entry è stata salvata senza analisi. Puoi richiederla solo in fase di scrittura.
+          Questa entry è stata salvata senza analisi. Puoi richiederla al momento della scrittura.
         </p>
       </section>
       }

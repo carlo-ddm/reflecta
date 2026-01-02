@@ -24,6 +24,9 @@ export async function getEntries() {
       createdAt: true,
       snippet: true,
       authorId: true,
+      analysis: {
+        select: { id: true },
+      },
     },
   });
 }
