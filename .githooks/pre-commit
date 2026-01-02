@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pattern='[0-9A-HJKMNP-TV-Z]{26}'
+
+if command -v rg >/dev/null 2>&1; then
+  if git ls-files -z | xargs -0 rg -n -S "$pattern"; then
+    echo "Found possible ULID(s) in tracked files. Remove or redact before committing."
+    exit 1
+  fi
+else
+  if git ls-files -z | xargs -0 grep -RInE "$pattern"; then
+    echo "Found possible ULID(s) in tracked files. Remove or redact before committing."
+    exit 1
+  fi
+fi

@@ -14,7 +14,7 @@ describe('EntryCard', () => {
     fixture = TestBed.createComponent(EntryCard);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('entry', {
-      id: '01HZY9YJ1PZ8K7M6J5N4V3C2B1',
+      id: 'test-entry-id',
       createdAt: '2025-01-01T00:00:00.000Z',
       snippet: 'Test snippet',
       hasAnalysis: false,
