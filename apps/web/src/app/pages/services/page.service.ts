@@ -54,7 +54,7 @@ export class PageService {
       tap((entry) => {
         this.upsertEntry({
           ...entry,
-          hasAnalysis: Boolean(entry.analysis),
+          hasAnalysis: Boolean(entry.analysis ?? entry.hasAnalysis),
         });
       }),
     );
@@ -65,7 +65,7 @@ export class PageService {
       tap((entry) => {
         this.upsertEntry({
           ...entry,
-          hasAnalysis: Boolean(entry.analysis),
+          hasAnalysis: Boolean(entry.analysis ?? entry.hasAnalysis),
         });
       }),
     );
@@ -88,6 +88,14 @@ export class PageService {
     );
   }
 
+  deleteEntry(entryId: string) {
+    return this.http.delete(`${API_BASE_URL}/entries/${entryId}`).pipe(
+      tap(() => {
+        this.entryList.update((entries) => entries.filter((entry) => entry.id !== entryId));
+      }),
+    );
+  }
+
   private upsertEntry(entry: EntryDetail) {
     this.entryList.update((entries) => {
       const index = entries.findIndex((item) => item.id === entry.id);
@@ -96,7 +104,7 @@ export class PageService {
         authorId: entry.authorId,
         createdAt: entry.createdAt,
         snippet: entry.snippet,
-        hasAnalysis: Boolean(entry.analysis),
+        hasAnalysis: Boolean(entry.analysis ?? entry.hasAnalysis),
       };
 
       if (index === -1) {

@@ -16,9 +16,9 @@ Scelta deliberata (accettata): il dominio include anche
 
 ## Principi non negoziabili
 
-1. **Entry immutabili**
-   - Una Entry, una volta creata, **non viene modificata**.
-   - A livello API questo implica: niente `PUT`/`PATCH` sulle entry.
+1. **Entry modificabili (decisione aggiornata)**
+   - Le Entry possono essere **eliminate** tramite API dedicate.
+   - Rimangono comunque **non aggiornabili** (`PUT`/`PATCH` non previsti).
 
 2. **Analisi solo su richiesta**
    - Nessuna analisi automatica.
@@ -126,7 +126,7 @@ Insieme delle metriche supportate:
 - `Entry (1) → (0..1) Analysis`
 - `Analysis (1) → (N) MetricScore`
 
-## Decisioni ancora da chiudere (prima di Modulo 3/4)
+## Decisioni ancora da chiudere (prima di evoluzioni future)
 
 1. **Gestione User (senza anticipare auth)**
    - Per MVP: user “single local” (seed) o login/registrazione?
@@ -142,3 +142,6 @@ Insieme delle metriche supportate:
 
 4. **Metriche richieste**
    - Le metriche sono tutte opzionali o ci si aspetta un set completo per ogni Analysis?
+
+5. **Politica di cancellazione**
+   - Hard delete (attuale) o soft delete con flag `deletedAt`?

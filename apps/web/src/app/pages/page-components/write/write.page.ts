@@ -5,7 +5,7 @@ import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
 import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
 import { ButtonUi } from '../../../ui/ui-components/button/button.ui';
-import { DEFAULT_AUTHOR_ID } from '../../../config/api.config';
+import { getAuthorId, setAuthorId } from '../../../config/api.config';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -20,11 +20,28 @@ export class WritePage {
   form = new FormGroup({
     ['entry-text']: new FormControl(''),
   });
+  authorIdControl = new FormControl(getAuthorId());
+  authorId = signal<string>(getAuthorId());
   isAnalysisDialogOpen = signal<boolean>(false);
   snackbar = signal<SnackbarData | null>(null);
   private pending?: Promise<boolean>;
   private resolve?: (value: boolean | PromiseLike<boolean>) => void;
   private timeoutId: any;
+
+  get hasContent(): boolean {
+    const value = this.form.get('entry-text')?.value ?? '';
+    return String(value).trim().length > 0;
+  }
+
+  get hasAuthorId(): boolean {
+    return Boolean(this.authorId().trim());
+  }
+
+  saveAuthorId() {
+    const value = String(this.authorIdControl.value ?? '').trim();
+    setAuthorId(value);
+    this.authorId.set(value);
+  }
 
   onAnalysisButtonClick(isOpen: boolean) {
     this.setAnalysisDialogOpen(isOpen);
@@ -51,13 +68,13 @@ export class WritePage {
       return;
     }
 
-    const authorId = DEFAULT_AUTHOR_ID.trim();
+    const authorId = this.authorId().trim();
 
     if (!authorId) {
       this.snackbar.set({
         snackbarIsOpen: true,
         snackbarTitle: 'Configurazione mancante',
-        snackbarMessage: 'Imposta DEFAULT_AUTHOR_ID in api.config.ts.',
+        snackbarMessage: 'Imposta l\'Author ID nella configurazione locale.',
         snackbarAction: '',
         snackbarDismiss: 'Chiudi',
       });
@@ -108,13 +125,13 @@ export class WritePage {
       return;
     }
 
-    const authorId = DEFAULT_AUTHOR_ID.trim();
+    const authorId = this.authorId().trim();
 
     if (!authorId) {
       this.snackbar.set({
         snackbarIsOpen: true,
         snackbarTitle: 'Configurazione mancante',
-        snackbarMessage: 'Imposta DEFAULT_AUTHOR_ID in api.config.ts.',
+        snackbarMessage: 'Imposta l\'Author ID nella configurazione locale.',
         snackbarAction: '',
         snackbarDismiss: 'Chiudi',
       });

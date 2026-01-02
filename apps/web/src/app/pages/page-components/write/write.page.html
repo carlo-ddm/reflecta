@@ -4,6 +4,35 @@
   </header>
 
   <div class="page__body">
+    <section class="setup" aria-label="Configurazione locale">
+      <div class="setup__card">
+        <div class="setup__header">
+          <h2 class="setup__title">Configurazione locale</h2>
+          <p class="setup__subtitle">
+            Salva l'Author ID in locale per creare nuove entries.
+          </p>
+        </div>
+        <div class="setup__row">
+          <label class="setup__label" for="author-id">Author ID</label>
+          <input
+            class="setup__input"
+            id="author-id"
+            name="author-id"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            [formControl]="authorIdControl"
+            placeholder="01..."
+          />
+          <button class="setup__btn" type="button" (click)="saveAuthorId()">
+            Salva
+          </button>
+        </div>
+        <p class="setup__hint" role="note">
+          Se non lo hai, esegui <code>npm -C apps/api run db:seed</code> e copia l'ID.
+        </p>
+      </div>
+    </section>
     <form
       class="editor"
       aria-label="Editor di scrittura"
@@ -27,10 +56,17 @@
 
       <div class="editor__actions" aria-label="Azioni (placeholder)">
         <app-button
-          [config]="{ type: 'button', text: 'Analizza', variant: 'secondary' }"
+          [config]="{
+            type: 'button',
+            text: 'Analizza',
+            variant: 'secondary',
+            disabled: !hasContent || !hasAuthorId
+          }"
           (clicked)="onAnalysisButtonClick(true)"
         />
-        <app-button [config]="{ type: 'submit', text: 'Invia' }" />
+        <app-button
+          [config]="{ type: 'submit', text: 'Invia', disabled: !hasContent || !hasAuthorId }"
+        />
       </div>
     </form>
   </div>
@@ -117,6 +153,7 @@
       <button
         class="analysis-modal__btn analysis-modal__btn--primary"
         type="button"
+        [disabled]="!hasContent || !hasAuthorId"
         (click)="onSubmitAnalysis()"
       >
         Salva

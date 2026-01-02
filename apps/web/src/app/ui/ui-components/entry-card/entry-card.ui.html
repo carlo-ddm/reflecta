@@ -1,5 +1,5 @@
 <li class="entries-list__item">
-  <a class="entry-card">
+  <a class="entry-card" [routerLink]="link()">
     <div class="entry-card__top">
       <time class="entry-card__date" [attr.datetime]="entry().createdAt">{{
         entry().createdAt | date : 'longDate'

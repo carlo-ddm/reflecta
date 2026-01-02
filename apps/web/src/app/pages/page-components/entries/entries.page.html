@@ -12,11 +12,26 @@
       </header>
 
       <div class="entries__content">
-        @if (entryPreviewList().length > 0) {
+        @if (isLoading()) {
+        <div class="entries-empty" role="status">
+          <div class="entries-empty__content">
+            <div class="entries-empty__title">Caricamento</div>
+            <div class="entries-empty__text">Sto recuperando le entries...</div>
+          </div>
+        </div>
+        } @else if (errorMessage()) {
+        <div class="entries-empty" role="alert">
+          <div class="entries-empty__content">
+            <div class="entries-empty__title">Errore</div>
+            <div class="entries-empty__text">{{ errorMessage() }}</div>
+            <a class="entries-empty__cta" routerLink="/">Torna a Write</a>
+          </div>
+        </div>
+        } @else if (entryPreviewList().length > 0) {
         <ul class="entries-list" aria-label="Entries" role="list">
-        @for (ep of entryPreviewList(); track ep.id) {
-          <app-entry-card [entry]="ep" [routerLink]="['/entries', ep.id]"></app-entry-card>
-        }
+          @for (ep of entryPreviewList(); track ep.id) {
+          <app-entry-card [entry]="ep" [link]="['/entries', ep.id]"></app-entry-card>
+          }
         </ul>
 
         } @else {

@@ -8,6 +8,7 @@ import { AnalysisMetric } from '../../generated/prisma/enums.js';
 const analysisRouter: Router = express.Router();
 
 const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+const isValidUlid = (value: string) => /^[0-9A-HJKMNP-TV-Z]{26}$/i.test(value);
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
 const computeMetrics = (content: string) => {
@@ -45,8 +46,14 @@ analysisRouter.post('/analysis', async (req, res, next) => {
     return next(new HttpError(400, 'entryId is required'));
   }
 
+  const normalizedEntryId = entryId.trim();
+
+  if (!isValidUlid(normalizedEntryId)) {
+    return next(new HttpError(400, 'entryId is invalid'));
+  }
+
   try {
-    const entry = await getEntryById(entryId.trim());
+    const entry = await getEntryById(normalizedEntryId);
 
     if (!entry) {
       return next(new HttpError(404, 'Entry not found'));

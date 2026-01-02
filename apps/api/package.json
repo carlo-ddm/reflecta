@@ -10,6 +10,7 @@
     "dev:debug:once": "tsx --inspect src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
+    "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",

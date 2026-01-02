@@ -19,11 +19,18 @@
   flex-wrap: wrap;
 }
 
+.page__actions {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 .page__back {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  margin-left: auto;
   padding: 0.45rem 0.65rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--border-1) 60%, transparent);
@@ -34,6 +41,31 @@
   font-weight: 650;
   letter-spacing: -0.01em;
   width: fit-content;
+}
+
+.page__danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, #c74632 40%, var(--border-1));
+  background: transparent;
+  color: color-mix(in srgb, #c74632 85%, #000);
+  font-size: 0.88rem;
+  font-weight: 640;
+  letter-spacing: -0.01em;
+}
+
+.page__danger:hover {
+  border-style: solid;
+  border-color: color-mix(in srgb, #c74632 55%, var(--border-1));
+  background: color-mix(in srgb, #c74632 12%, var(--surface-1));
+}
+
+.page__danger:focus-visible {
+  outline: 3px solid color-mix(in srgb, #c74632 55%, transparent);
+  outline-offset: 3px;
 }
 
 .page__back:hover {

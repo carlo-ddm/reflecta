@@ -41,3 +41,29 @@ export async function getEntryById(id: string) {
     },
   });
 }
+
+export async function deleteEntryById(id: string) {
+  const entry = await prisma.entry.findUnique({
+    where: { id },
+    include: {
+      analysis: {
+        select: { id: true },
+      },
+    },
+  });
+
+  if (!entry) {
+    return null;
+  }
+
+  await prisma.$transaction(async (tx) => {
+    if (entry.analysis) {
+      await tx.metricScore.deleteMany({ where: { analysisId: entry.analysis.id } });
+      await tx.analysis.delete({ where: { id: entry.analysis.id } });
+    }
+
+    await tx.entry.delete({ where: { id } });
+  });
+
+  return entry;
+}

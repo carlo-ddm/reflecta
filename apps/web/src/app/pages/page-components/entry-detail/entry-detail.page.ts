@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   ANALYSIS_METRIC_LABELS,
   ANALYSIS_METRIC_ORDER,
@@ -18,9 +18,13 @@ import { firstValueFrom } from 'rxjs';
 })
 export class EntryDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private entryService = inject(PageService);
   entry = signal<EntryDetail | null>(null);
   hasAnalysis = computed(() => Boolean(this.entry()?.analysis));
+  isDeleteDialogOpen = signal(false);
+  isDeleting = signal(false);
+  deleteError = signal<string | null>(null);
 
   analysisMetrics = computed(() => {
     const analysis = this.entry()?.analysis;
@@ -56,6 +60,34 @@ export class EntryDetailPage implements OnInit {
       })
       .catch(() => {
         this.entry.set(null);
+      });
+  }
+
+  openDeleteDialog() {
+    this.deleteError.set(null);
+    this.isDeleteDialogOpen.set(true);
+  }
+
+  closeDeleteDialog() {
+    this.isDeleteDialogOpen.set(false);
+  }
+
+  confirmDelete() {
+    const entry = this.entry();
+    if (!entry || this.isDeleting()) return;
+
+    this.isDeleting.set(true);
+    this.deleteError.set(null);
+
+    firstValueFrom(this.entryService.deleteEntry(entry.id))
+      .then(() => {
+        this.router.navigate(['/entries']);
+      })
+      .catch(() => {
+        this.deleteError.set('Impossibile eliminare l\'entry.');
+      })
+      .finally(() => {
+        this.isDeleting.set(false);
       });
   }
 }

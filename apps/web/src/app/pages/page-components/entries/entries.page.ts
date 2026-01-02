@@ -12,6 +12,8 @@ import { RouterLink } from "@angular/router";
 export class EntriesPage implements OnInit {
   private pageService = inject(PageService);
   protected readonly entryPreviewList = this.pageService.getEntryList();
+  protected readonly isLoading = this.pageService.isLoading();
+  protected readonly errorMessage = this.pageService.errorMessage();
 
   ngOnInit(): void {
     this.pageService.loadEntries();
