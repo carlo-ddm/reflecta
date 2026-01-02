@@ -4,15 +4,17 @@
       <h1 class="page__title">Entry</h1>
       <div class="page__actions">
         <button
-          mat-stroked-button
-          color="warn"
+          mat-button
+          class="rf-button rf-button--ghost"
           type="button"
           (click)="openDeleteDialog()"
           [disabled]="isDeleting()"
         >
           {{ isDeleting() ? 'Elimino...' : 'Elimina entry' }}
         </button>
-        <a mat-button routerLink="/entries">Torna alla lista dei tuoi scritti</a>
+        <a mat-button class="rf-button rf-button--tonal" routerLink="/entries">
+          Torna alla lista dei tuoi scritti
+        </a>
       </div>
     </div>
     <p class="page__subtitle">Rilettura completa dello scritto, con analisi (se presente).</p>

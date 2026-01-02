@@ -35,8 +35,16 @@ import { MatButtonModule } from '@angular/material/button';
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Annulla</button>
-      <button mat-flat-button color="primary" [mat-dialog-close]="true">Salva</button>
+      <button mat-button class="rf-button rf-button--tonal" mat-dialog-close>
+        Annulla
+      </button>
+      <button
+        mat-flat-button
+        class="rf-button rf-button--primary"
+        [mat-dialog-close]="true"
+      >
+        Salva
+      </button>
     </mat-dialog-actions>
   `,
   styles: [

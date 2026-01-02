@@ -30,6 +30,104 @@
   box-shadow: var(--sh-1);
 }
 
+.mat-mdc-unelevated-button .mdc-button__label,
+.mat-mdc-tonal-button .mdc-button__label,
+.mat-mdc-outlined-button .mdc-button__label,
+.mat-mdc-text-button .mdc-button__label {
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+}
+
+.mat-mdc-unelevated-button,
+.mat-mdc-tonal-button,
+.mat-mdc-outlined-button,
+.mat-mdc-text-button {
+  min-height: 44px;
+  padding: 0.55rem 1.2rem;
+}
+
+.mat-mdc-tonal-button {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--fg);
+}
+
+.rf-button {
+  min-height: 44px;
+  border-radius: var(--r-pill);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  padding: 0.5rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.rf-button--tonal {
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface)) !important;
+  color: var(--accent) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border)) !important;
+}
+
+.rf-button--tonal:hover {
+  box-shadow: var(--sh-1);
+  transform: translateY(-1px);
+}
+
+.rf-button--tonal:disabled {
+  opacity: 0.6;
+}
+
+.rf-button--primary {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  border: 1px solid transparent !important;
+}
+
+.rf-button--primary:hover {
+  box-shadow: var(--sh-1);
+  transform: translateY(-1px);
+}
+
+.rf-button--primary:disabled {
+  opacity: 0.6;
+}
+
+.rf-button--ghost {
+  border: 1px solid color-mix(in srgb, var(--danger) 32%, var(--border)) !important;
+  color: var(--danger) !important;
+  background: transparent !important;
+}
+
+.rf-button--ghost:hover {
+  box-shadow: var(--sh-1);
+  transform: translateY(-1px);
+}
+
+.rf-button--ghost:disabled {
+  opacity: 0.6;
+}
+
+.rf-button.mat-mdc-button-disabled {
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-unelevated-button.mat-primary:focus-visible {
+  filter: brightness(1.05);
+}
+
 .mat-mdc-unelevated-button:active,
 .mat-mdc-tonal-button:active {
   box-shadow: none;

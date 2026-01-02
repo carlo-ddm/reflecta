@@ -79,6 +79,15 @@
   background: var(--surface-2);
   text-decoration: none;
   font-weight: var(--fw-medium);
+  transition: background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.entries-empty__cta:hover {
+  box-shadow: var(--sh-1);
+  transform: translateY(-1px);
 }
 
 .entries-list {

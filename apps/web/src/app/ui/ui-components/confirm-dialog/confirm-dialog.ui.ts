@@ -19,12 +19,14 @@ export interface ConfirmDialogData {
       <p class="confirm-dialog__message">{{ data.message }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>
+      <button mat-button class="rf-button rf-button--tonal" mat-dialog-close>
         {{ data.cancelLabel ?? 'Annulla' }}
       </button>
       <button
         mat-flat-button
-        [color]="data.tone ?? 'primary'"
+        class="rf-button"
+        [class.rf-button--primary]="(data.tone ?? 'primary') !== 'warn'"
+        [class.rf-button--ghost]="(data.tone ?? 'primary') === 'warn'"
         [mat-dialog-close]="true"
       >
         {{ data.confirmLabel ?? 'Conferma' }}

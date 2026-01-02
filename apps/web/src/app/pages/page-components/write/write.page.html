@@ -32,6 +32,7 @@
           <div class="editor__actions" aria-label="Azioni">
             <button
               mat-tonal-button
+              class="rf-button rf-button--tonal"
               type="button"
               [disabled]="!hasContent || !hasAuthorId"
               (click)="openAnalysisDialog()"
@@ -41,6 +42,7 @@
             <button
               mat-flat-button
               color="primary"
+              class="rf-button rf-button--primary"
               type="submit"
               [disabled]="!hasContent || !hasAuthorId"
             >
