@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "tsx --watch src/app.ts",
+    "dev:once": "tsx src/app.ts",
     "dev:debug": "tsx --watch --inspect src/app.ts",
+    "dev:debug:once": "tsx --inspect src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
+    "db:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
