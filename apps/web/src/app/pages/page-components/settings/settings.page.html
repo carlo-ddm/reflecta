@@ -1,0 +1,108 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Impostazioni</h1>
+    <p class="page__subtitle">Gestisci la configurazione locale dell'app.</p>
+  </header>
+
+  <div class="page__body">
+    <section class="settings" aria-label="Configurazione locale">
+      <div class="settings__card">
+        <div class="settings__header">
+          <p class="settings__eyebrow">Configurazione locale</p>
+          <h2 class="settings__title">Author ID</h2>
+          <p class="settings__subtitle">
+            Salvato nel browser per creare nuove entries.
+          </p>
+        </div>
+        <div class="settings__row">
+          <label class="settings__label" for="author-id">Author ID</label>
+          <div class="settings__input-row">
+            <input
+              class="settings__input"
+              id="author-id"
+              name="author-id"
+              [type]="authorIdInputType"
+              autocomplete="off"
+              spellcheck="false"
+              [formControl]="authorIdControl"
+              placeholder="01..."
+            />
+            <button
+              class="settings__icon-btn"
+              type="button"
+              (click)="toggleAuthorIdVisibility()"
+              [attr.aria-pressed]="authorIdVisible()"
+              [attr.aria-label]="authorIdVisible() ? 'Nascondi Author ID' : 'Mostra Author ID'"
+            >
+              @if (authorIdVisible()) {
+              <svg class="settings__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M3.27 2 2 3.27l3.05 3.05C3.1 7.65 1.5 9.69 1 12c1.73 3.89 6 7 11 7 2.03 0 3.95-.5 5.6-1.37l3.13 3.13L22 20.73 3.27 2zM12 7a5 5 0 0 1 5 5c0 .73-.16 1.43-.44 2.06l-1.73-1.73A3 3 0 0 0 12 9c-.54 0-1.04.14-1.48.38L8.96 7.82A4.98 4.98 0 0 1 12 7zm-7 5c.5-1.21 1.47-2.35 2.75-3.32l1.62 1.62A4.99 4.99 0 0 0 9 12a5 5 0 0 0 5 5c.6 0 1.19-.11 1.73-.3l1.53 1.53A8.06 8.06 0 0 1 12 18c-3.7 0-6.95-2.18-8-6z"
+                  fill="currentColor"
+                />
+              </svg>
+              } @else {
+              <svg class="settings__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 5c-5 0-9.27 3.11-11 7 1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"
+                  fill="currentColor"
+                />
+              </svg>
+              }
+            </button>
+          </div>
+          @if (!isAuthorIdEmpty && !isAuthorIdValid) {
+          <p class="settings__error" role="alert">L'Author ID deve essere un ULID valido (26 caratteri).</p>
+          }
+          <div class="settings__actions">
+            <button
+              class="settings__btn"
+              type="button"
+              (click)="saveAuthorId()"
+              [disabled]="!canSaveAuthorId"
+            >
+              Salva
+            </button>
+            <button
+              class="settings__btn settings__btn--ghost"
+              type="button"
+              (click)="openRemoveConfirm()"
+              [disabled]="!canRemoveAuthorId"
+            >
+              Rimuovi
+            </button>
+          </div>
+        </div>
+        <p class="settings__hint" role="note">
+          Se non lo hai, esegui <code>npm -C apps/api run db:seed</code> e copia l'ID.
+        </p>
+      </div>
+    </section>
+  </div>
+</section>
+
+@if (showRemoveConfirm()) {
+<section class="settings-modal" aria-label="Conferma rimozione">
+  <div class="settings-modal__backdrop" aria-hidden="true"></div>
+  <div class="settings-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="remove-title">
+    <header class="settings-modal__header">
+      <h2 class="settings-modal__title" id="remove-title">Rimuovere l'Author ID?</h2>
+      <p class="settings-modal__subtitle">
+        Così non potrai creare nuove entries finché non lo reimposti.
+      </p>
+    </header>
+    <footer class="settings-modal__footer">
+      <button class="settings-modal__btn" type="button" (click)="closeRemoveConfirm()">
+        Annulla
+      </button>
+      <button
+        class="settings-modal__btn settings-modal__btn--danger"
+        type="button"
+        (click)="confirmRemoveAuthorId()"
+      >
+        Rimuovi
+      </button>
+    </footer>
+  </div>
+</section>
+}

@@ -5,7 +5,7 @@ import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
 import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
 import { ButtonUi } from '../../../ui/ui-components/button/button.ui';
-import { getAuthorId, setAuthorId } from '../../../config/api.config';
+import { getAuthorId } from '../../../config/api.config';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -20,7 +20,6 @@ export class WritePage {
   form = new FormGroup({
     ['entry-text']: new FormControl(''),
   });
-  authorIdControl = new FormControl(getAuthorId());
   authorId = signal<string>(getAuthorId());
   isAnalysisDialogOpen = signal<boolean>(false);
   snackbar = signal<SnackbarData | null>(null);
@@ -35,12 +34,6 @@ export class WritePage {
 
   get hasAuthorId(): boolean {
     return Boolean(this.authorId().trim());
-  }
-
-  saveAuthorId() {
-    const value = String(this.authorIdControl.value ?? '').trim();
-    setAuthorId(value);
-    this.authorId.set(value);
   }
 
   onAnalysisButtonClick(isOpen: boolean) {
@@ -68,7 +61,8 @@ export class WritePage {
       return;
     }
 
-    const authorId = this.authorId().trim();
+    const authorId = getAuthorId().trim();
+    this.authorId.set(authorId);
 
     if (!authorId) {
       this.snackbar.set({
@@ -125,7 +119,8 @@ export class WritePage {
       return;
     }
 
-    const authorId = this.authorId().trim();
+    const authorId = getAuthorId().trim();
+    this.authorId.set(authorId);
 
     if (!authorId) {
       this.snackbar.set({
