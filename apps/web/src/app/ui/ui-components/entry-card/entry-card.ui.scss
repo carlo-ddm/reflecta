@@ -3,52 +3,36 @@
 }
 
 .entry-card {
-  display: grid;
-  gap: 0.55rem;
-  padding: 0.9rem 1rem;
-  border-radius: 16px;
-  border: 1px solid var(--border-1);
-  background: color-mix(in srgb, var(--surface-1) 92%, var(--app-bg));
+  display: block;
   text-decoration: none;
-  cursor: pointer;
-  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+  color: inherit;
 }
 
-.entry-card:hover {
-  background: color-mix(in srgb, var(--brand-1) 5%, var(--surface-1));
-  border-color: color-mix(in srgb, var(--brand-1) 16%, var(--border-1));
-  transform: translateY(-1px);
+.entry-card:focus-visible .entry-card__surface {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.entry-card:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
-  outline-offset: 3px;
+.entry-card__surface {
+  padding: var(--s-4);
+  border-radius: var(--r-3);
 }
 
 .entry-card__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
 }
 
 .entry-card__date {
-  font-size: 0.9rem;
-  opacity: 0.8;
+  font-size: var(--fs-2);
+  color: var(--muted);
 }
 
 .entry-card__snippet {
   margin: 0;
-  max-width: 78ch;
-  line-height: 1.6;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .entry-card {
-    transition: none;
-  }
-
-  .entry-card:hover {
-    transform: none;
-  }
+  line-height: var(--lh-loose);
+  font-size: var(--fs-3);
 }

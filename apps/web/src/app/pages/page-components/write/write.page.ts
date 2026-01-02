@@ -1,31 +1,41 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PageService } from '../../services/page.service';
-import { Snackbar } from '../../../ui/ui-components/snackbar/snackbar.ui';
-import { SnackbarData } from '../../../ui/models/models';
 import { Router } from '@angular/router';
-import { ButtonUi } from '../../../ui/ui-components/button/button.ui';
-import { getAuthorId } from '../../../config/api.config';
 import { firstValueFrom } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { PageService } from '../../services/page.service';
+import { getAuthorId } from '../../../config/api.config';
+import { AnalysisDialog } from './analysis-dialog.ui';
 
 @Component({
   selector: 'app-write',
-  imports: [ReactiveFormsModule, Snackbar, ButtonUi],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './write.page.html',
   styleUrl: './write.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WritePage {
   private router = inject(Router);
   private pageService = inject(PageService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
   form = new FormGroup({
     ['entry-text']: new FormControl(''),
   });
   authorId = signal<string>(getAuthorId());
-  isAnalysisDialogOpen = signal<boolean>(false);
-  snackbar = signal<SnackbarData | null>(null);
-  private pending?: Promise<boolean>;
-  private resolve?: (value: boolean | PromiseLike<boolean>) => void;
-  private timeoutId: any;
 
   get hasContent(): boolean {
     const value = this.form.get('entry-text')?.value ?? '';
@@ -36,28 +46,27 @@ export class WritePage {
     return Boolean(this.authorId().trim());
   }
 
-  onAnalysisButtonClick(isOpen: boolean) {
-    this.setAnalysisDialogOpen(isOpen);
+  openAnalysisDialog() {
+    if (!this.hasContent || !this.hasAuthorId) return;
+
+    const dialogRef = this.dialog.open(AnalysisDialog, {
+      panelClass: 'rf-dialog',
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.onSubmitAnalysis();
+      }
+    });
   }
 
   onSubmit() {
-    // guard
-    if (this.pending) {
-      if (this.resolve) this.resolve(false);
-      this.closeSnackbar();
-    }
-
     const rawContent = this.form.get('entry-text')?.value ?? '';
     const content = String(rawContent).trim();
 
     if (!content) {
-      this.snackbar.set({
-        snackbarIsOpen: true,
-        snackbarTitle: 'Testo vuoto',
-        snackbarMessage: 'Scrivi qualcosa prima di salvare.',
-        snackbarAction: '',
-        snackbarDismiss: 'Chiudi',
-      });
+      this.showSnack('Scrivi qualcosa prima di salvare.', 'warn');
       return;
     }
 
@@ -65,13 +74,7 @@ export class WritePage {
     this.authorId.set(authorId);
 
     if (!authorId) {
-      this.snackbar.set({
-        snackbarIsOpen: true,
-        snackbarTitle: 'Configurazione mancante',
-        snackbarMessage: 'Imposta l\'Author ID nella configurazione locale.',
-        snackbarAction: '',
-        snackbarDismiss: 'Chiudi',
-      });
+      this.showSnack('Imposta l\'Author ID nelle impostazioni.', 'warn');
       return;
     }
 
@@ -83,24 +86,10 @@ export class WritePage {
     )
       .then(() => {
         this.form.reset();
-        this.setAnalysisDialogOpen(false);
-        this.snackbar.set({
-          snackbarIsOpen: true,
-          snackbarTitle: 'Salvato',
-          snackbarMessage: 'Entry salvata con successo.',
-          snackbarAction: 'Vai a Entries',
-          snackbarDismiss: 'Chiudi',
-        });
-        this.snackbarAction();
+        this.showSnack('Entry salvata con successo.', 'success', 'Vai a Entries');
       })
       .catch(() => {
-        this.snackbar.set({
-          snackbarIsOpen: true,
-          snackbarTitle: 'Errore',
-          snackbarMessage: 'Impossibile salvare l\'entry.',
-          snackbarAction: '',
-          snackbarDismiss: 'Chiudi',
-        });
+        this.showSnack('Impossibile salvare l\'entry.', 'danger');
       });
   }
 
@@ -109,13 +98,7 @@ export class WritePage {
     const content = String(rawContent).trim();
 
     if (!content) {
-      this.snackbar.set({
-        snackbarIsOpen: true,
-        snackbarTitle: 'Testo vuoto',
-        snackbarMessage: 'Scrivi qualcosa prima di analizzare.',
-        snackbarAction: '',
-        snackbarDismiss: 'Chiudi',
-      });
+      this.showSnack('Scrivi qualcosa prima di analizzare.', 'warn');
       return;
     }
 
@@ -123,13 +106,7 @@ export class WritePage {
     this.authorId.set(authorId);
 
     if (!authorId) {
-      this.snackbar.set({
-        snackbarIsOpen: true,
-        snackbarTitle: 'Configurazione mancante',
-        snackbarMessage: 'Imposta l\'Author ID nella configurazione locale.',
-        snackbarAction: '',
-        snackbarDismiss: 'Chiudi',
-      });
+      this.showSnack('Imposta l\'Author ID nelle impostazioni.', 'warn');
       return;
     }
 
@@ -142,68 +119,27 @@ export class WritePage {
       .then((entry) => firstValueFrom(this.pageService.requestAnalysis(entry.id)))
       .then(() => {
         this.form.reset();
-        this.setAnalysisDialogOpen(false);
-        this.snackbar.set({
-          snackbarIsOpen: true,
-          snackbarTitle: 'Analisi salvata',
-          snackbarMessage: 'Entry salvata con analisi.',
-          snackbarAction: 'Vai a Entries',
-          snackbarDismiss: 'Chiudi',
-        });
-        this.snackbarAction();
+        this.showSnack('Entry salvata con analisi.', 'success', 'Vai a Entries');
       })
       .catch(() => {
-        this.snackbar.set({
-          snackbarIsOpen: true,
-          snackbarTitle: 'Errore',
-          snackbarMessage: 'Impossibile completare l\'analisi.',
-          snackbarAction: '',
-          snackbarDismiss: 'Chiudi',
-        });
+        this.showSnack('Impossibile completare l\'analisi.', 'danger');
       });
   }
 
-  onCloseSnackbar(result: boolean) {
-    const resolve = this.resolve;
-    this.closeSnackbar();
-    resolve?.(result);
-  }
-
-  private closeSnackbar() {
-    this.resolve = undefined;
-    this.pending = undefined;
-    clearTimeout(this.timeoutId);
-    this.timeoutId = undefined;
-    this.snackbar.set({
-      snackbarIsOpen: false,
-      snackbarTitle: '',
-      snackbarMessage: '',
-      snackbarAction: '',
-      snackbarDismiss: '',
-    } as SnackbarData);
-  }
-
-  private snackbarAction() {
-    this.snackbarWait().then((res) => {
-      if (res) this.router.navigate(['/entries']);
+  private showSnack(
+    message: string,
+    tone: 'success' | 'warn' | 'danger',
+    action?: string,
+  ) {
+    const ref = this.snackBar.open(message, action, {
+      duration: action ? 5000 : 3500,
+      panelClass: ['rf-snackbar', `rf-snackbar--${tone}`],
     });
-  }
 
-  private snackbarWait(): Promise<boolean> {
-    if (this.pending) {
-      return this.pending;
+    if (action) {
+      ref.onAction().subscribe(() => {
+        this.router.navigate(['/entries']);
+      });
     }
-    this.pending = new Promise((resolve) => {
-      this.resolve = resolve;
-      this.timeoutId = setTimeout(() => {
-        resolve(false);
-        this.closeSnackbar();
-      }, 5000);
-    });
-    return this.pending;
-  }
-
-  private setAnalysisDialogOpen(isOpen: boolean) {
-    this.isAnalysisDialogOpen.set(isOpen);
   }
 }

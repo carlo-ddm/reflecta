@@ -1,13 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { PageService } from '../../services/page.service';
 import { EntryCard } from '../../../ui/ui-components/entry-card/entry-card.ui';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-entries',
-  imports: [EntryCard, RouterLink],
+  imports: [EntryCard, MatCardModule, RouterLink],
   templateUrl: './entries.page.html',
   styleUrl: './entries.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntriesPage implements OnInit {
   private pageService = inject(PageService);

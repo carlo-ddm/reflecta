@@ -1,80 +1,48 @@
 .page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: grid;
+  gap: var(--s-5);
 }
 
 .page__header {
   display: grid;
-  gap: 0.4rem;
-  width: min(78ch, 100%);
-  margin-inline: auto;
+  gap: var(--s-2);
 }
 
 .page__title {
-  margin: 0;
-  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-size: clamp(2rem, 4vw, 2.75rem);
   letter-spacing: -0.02em;
+}
+
+.page__subtitle {
+  margin: 0;
+  color: var(--muted);
+  max-width: 64ch;
 }
 
 .page__body {
   display: grid;
-  gap: 1rem;
+  gap: var(--s-4);
 }
 
-.editor {
-  width: min(78ch, 100%);
-  margin-inline: auto;
-  display: grid;
-  gap: 0.75rem;
+.editor-card {
+  padding: var(--s-2);
 }
 
-.editor__surface {
-  padding: 1rem;
-  border-radius: 16px;
-  background: var(--surface-1);
-  border: 1px solid var(--border-1);
-  box-shadow: var(--shadow-sm);
-  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
-}
-
-.editor__surface:focus-within {
-  border-color: color-mix(in srgb, var(--brand-1) 35%, var(--border-1));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-1) 18%, transparent),
-    var(--shadow-md);
-  transform: translateY(-1px);
-}
-
-.editor__label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  opacity: 0.9;
-}
-
-.editor__textarea {
-  width: 100%;
-  min-height: min(62svh, 40rem);
-  margin-top: 0.65rem;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  resize: vertical;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: 1.05rem;
-  line-height: 1.75;
-  letter-spacing: 0.002em;
-}
-
-.editor__textarea::placeholder {
-  opacity: 0.55;
+.editor__field textarea {
+  min-height: min(58vh, 32rem);
+  line-height: var(--lh-loose);
+  font-size: var(--fs-4);
 }
 
 .editor__actions {
   display: flex;
+  gap: var(--s-3);
   justify-content: flex-end;
-  gap: 0.5rem;
+  padding-top: var(--s-3);
+}
+
+.page__note {
+  margin: 0;
+  font-size: var(--fs-2);
+  color: var(--muted);
 }

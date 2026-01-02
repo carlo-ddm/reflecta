@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 type ButtonVariant = 'primary' | 'secondary';
 
@@ -11,9 +11,9 @@ export type ButtonConfig = {
 
 @Component({
   selector: 'app-button',
-  standalone: true,
   templateUrl: './button.ui.html',
   styleUrls: ['./button.ui.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonUi {
   config = input.required<ButtonConfig>();

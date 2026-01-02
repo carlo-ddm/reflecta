@@ -1,12 +1,18 @@
 <section class="page">
   <header class="page__header">
     <div class="page__header-row">
-      <h1 class="page__title">Entry detail</h1>
+      <h1 class="page__title">Entry</h1>
       <div class="page__actions">
-        <button class="page__danger" type="button" (click)="openDeleteDialog()">
-          Elimina entry
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="openDeleteDialog()"
+          [disabled]="isDeleting()"
+        >
+          {{ isDeleting() ? 'Elimino...' : 'Elimina entry' }}
         </button>
-        <a class="page__back" routerLink="/entries">Torna alla lista dei tuoi scritti</a>
+        <a mat-button routerLink="/entries">Torna alla lista dei tuoi scritti</a>
       </div>
     </div>
     <p class="page__subtitle">Rilettura completa dello scritto, con analisi (se presente).</p>
@@ -14,112 +20,76 @@
 
   <div class="page__body">
     <div class="entry-detail__layout">
-      <article class="entry-detail" aria-label="Testo completo">
-        <header class="entry-detail__header">
-          <div class="entry-detail__meta">
-            <time class="entry-detail__date" [attr.datetime]="entry()?.createdAt">{{
-              entry()?.createdAt | date : 'longDate'
-            }}</time>
-            <span class="entry-detail__dot" aria-hidden="true"></span>
+      <mat-card class="entry-detail" aria-label="Testo completo">
+        <mat-card-content>
+          <div class="entry-detail__header">
+            <div class="entry-detail__meta">
+              <time class="entry-detail__date" [attr.datetime]="entry()?.createdAt">
+                {{ entry()?.createdAt | date : 'longDate' }}
+              </time>
+              <span class="entry-detail__dot" aria-hidden="true"></span>
+            </div>
+            <app-badge [hasAnalysis]="hasAnalysis()" />
           </div>
-          <app-badge [hasAnalysis]="hasAnalysis()" />
-        </header>
 
-        <div class="entry-detail__text">
-          <p>
-            {{ entry()?.content || entry()?.snippet }}
-          </p>
-        </div>
-      </article>
+          <div class="entry-detail__text">
+            <p>
+              {{ entry()?.content || entry()?.snippet }}
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
       @if (hasAnalysis()) {
-      <section class="entry-analysis" aria-label="Analisi">
-        <header class="entry-analysis__header">
-          <h2 class="entry-analysis__title">Analisi</h2>
-          <p class="entry-analysis__subtitle">Valori calcolati al momento del salvataggio.</p>
-        </header>
+      <mat-card class="entry-analysis" aria-label="Analisi">
+        <mat-card-content>
+          <header class="entry-analysis__header">
+            <h2 class="entry-analysis__title">Analisi</h2>
+            <p class="entry-analysis__subtitle">Valori calcolati al momento del salvataggio.</p>
+          </header>
 
-        <div class="analysis-profile" aria-label="Profilo di analisi">
-          <div class="analysis-profile__grid" role="list">
-            @for (metric of analysisMetrics(); track metric.key) {
-            <div class="analysis-metric" role="listitem">
-              <div class="analysis-metric__label">{{ metric.label }}</div>
-              <div class="analysis-metric__value">
-                {{ metric.value === null ? '—' : metric.value }}
+          <div class="analysis-profile" aria-label="Profilo di analisi">
+            <div class="analysis-profile__grid" role="list">
+              @for (metric of analysisMetrics(); track metric.key) {
+              <div class="analysis-metric" role="listitem">
+                <div class="analysis-metric__label">{{ metric.label }}</div>
+                <div class="analysis-metric__value">
+                  {{ metric.value === null ? '--' : metric.value }}
+                </div>
+                <div class="analysis-metric__bar" aria-hidden="true">
+                  <span [style.--pct]="metric.pct === null ? '0%' : metric.pct + '%'"> </span>
+                </div>
               </div>
-              <div class="analysis-metric__bar" aria-hidden="true">
-                <span [style.--pct]="metric.pct === null ? '0%' : metric.pct + '%'"></span>
-              </div>
+              }
             </div>
-            }
-          </div>
 
-          <div class="analysis-chart" aria-label="Grafico (placeholder)">
-            <div class="analysis-chart__frame" aria-hidden="true">
-              <div class="analysis-chart__ring"></div>
-              <div class="analysis-chart__ring"></div>
-              <div class="analysis-chart__ring"></div>
-              <div class="analysis-chart__dot"></div>
+            <div class="analysis-chart" aria-label="Grafico (placeholder)">
+              <div class="analysis-chart__frame" aria-hidden="true">
+                <div class="analysis-chart__ring"></div>
+                <div class="analysis-chart__ring"></div>
+                <div class="analysis-chart__ring"></div>
+                <div class="analysis-chart__dot"></div>
+              </div>
+              <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
             </div>
-            <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
           </div>
-        </div>
-      </section>
+        </mat-card-content>
+      </mat-card>
 
       } @else {
 
-      <section class="entry-analysis entry-analysis--empty" aria-label="Analisi non disponibile">
-        <header class="entry-analysis__header">
-          <h2 class="entry-analysis__title">Analisi</h2>
-          <p class="entry-analysis__subtitle">Non presente per questa entry.</p>
-        </header>
-        <p class="entry-analysis__empty">
-          Questa entry è stata salvata senza analisi. Puoi richiederla al momento della scrittura.
-        </p>
-      </section>
+      <mat-card class="entry-analysis entry-analysis--empty" aria-label="Analisi non disponibile">
+        <mat-card-content>
+          <header class="entry-analysis__header">
+            <h2 class="entry-analysis__title">Analisi</h2>
+            <p class="entry-analysis__subtitle">Non presente per questa entry.</p>
+          </header>
+          <p class="entry-analysis__empty">
+            Questa entry e stata salvata senza analisi. Puoi richiederla al momento della scrittura.
+          </p>
+        </mat-card-content>
+      </mat-card>
       }
     </div>
   </div>
 </section>
-
-@if (isDeleteDialogOpen()) {
-<section class="analysis-modal" aria-label="Conferma eliminazione">
-  <div class="analysis-modal__backdrop" aria-hidden="true"></div>
-
-  <div class="analysis-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="delete-title">
-    <header class="analysis-modal__header">
-      <div class="analysis-modal__title-wrap">
-        <h2 class="analysis-modal__title" id="delete-title">Eliminare questa entry?</h2>
-        <p class="analysis-modal__subtitle">Questa azione e irreversibile.</p>
-      </div>
-
-      <button class="analysis-modal__btn" type="button" (click)="closeDeleteDialog()">
-        Annulla
-      </button>
-    </header>
-
-    <div class="analysis-modal__content">
-      <p>
-        Se confermi, la entry e la relativa analisi verranno eliminate definitivamente.
-      </p>
-      @if (deleteError()) {
-      <p class="entry-analysis__empty">{{ deleteError() }}</p>
-      }
-    </div>
-
-    <footer class="analysis-modal__footer" aria-label="Azioni">
-      <button class="analysis-modal__btn" type="button" (click)="closeDeleteDialog()">
-        Annulla
-      </button>
-      <button
-        class="analysis-modal__btn analysis-modal__btn--primary"
-        type="button"
-        [disabled]="isDeleting()"
-        (click)="confirmDelete()"
-      >
-        {{ isDeleting() ? 'Elimino...' : 'Elimina' }}
-      </button>
-    </footer>
-  </div>
-</section>
-}

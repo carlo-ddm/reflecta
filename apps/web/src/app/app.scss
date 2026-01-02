@@ -1,126 +1,102 @@
 :host {
   display: block;
-  min-height: 100svh;
-  background: var(--app-bg);
-  color: var(--app-fg);
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
 }
 
 .app-shell {
-  min-height: inherit;
-  display: grid;
-  grid-template-rows: auto 1fr;
-}
-
-.app-shell__container {
-  width: min(var(--container-width), 100% - 2rem);
-  margin-inline: auto;
+  height: 100%;
 }
 
 .app-shell__skip {
   position: absolute;
-  inset-inline-start: 0.75rem;
-  inset-block-start: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 999px;
-  background: var(--surface-1);
-  border: 1px solid var(--border-1);
-  color: var(--app-fg);
-  box-shadow: var(--shadow-sm);
+  inset-inline-start: var(--s-3);
+  inset-block-start: var(--s-3);
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: inherit;
+  box-shadow: var(--sh-1);
   transform: translateY(-200%);
-  transition: transform 120ms ease;
-  z-index: 2;
+  transition: transform var(--t-fast) var(--ease);
+  z-index: 20;
 }
 
 .app-shell__skip:focus {
   transform: translateY(0);
 }
 
-.app-shell__header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: color-mix(in srgb, var(--app-bg) 85%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-1);
+.app-shell__sidenav {
+  width: 240px;
+  padding: var(--s-4) 0;
 }
 
-.app-shell__header .app-shell__container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 0.9rem;
+.mat-sidenav-content {
+  background: var(--bg-gradient);
 }
 
 .app-shell__brand {
-  font-size: 0.95rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
+  padding: 0 var(--s-5) var(--s-3);
+  font-size: var(--fs-4);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
   text-decoration: none;
-}
-
-.app-shell__brand:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
-  outline-offset: 3px;
-  border-radius: 10px;
+  color: inherit;
 }
 
 .app-shell__nav {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.app-shell__nav-link,
-.app-shell__nav a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 999px;
-  color: var(--app-fg);
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition: background 120ms ease, border-color 120ms ease;
-}
-
-.app-shell__nav-link:hover,
-.app-shell__nav a:hover {
-  background: color-mix(in srgb, var(--brand-1) 6%, var(--surface-1));
-  border-color: color-mix(in srgb, var(--brand-1) 16%, transparent);
-}
-
-.app-shell__nav-link:focus-visible,
-.app-shell__nav a:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand-1) 55%, transparent);
-  outline-offset: 3px;
+  padding-top: var(--s-2);
 }
 
 .app-shell__nav-icon {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--s-2);
+}
+
+.app-shell__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-shell__menu {
+  margin-right: var(--s-2);
+}
+
+.app-shell__menu-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.app-shell__toolbar-title {
+  font-size: var(--fs-4);
+  font-weight: var(--fw-semibold);
+  text-transform: capitalize;
 }
 
 .app-shell__main {
-  padding-block: 1.25rem 2.5rem;
+  padding: var(--s-6) 0 var(--s-7);
 }
 
-.app-shell__content {
-  padding: 1.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--surface-1);
-  border: 1px solid var(--border-1);
-  box-shadow: var(--shadow-md);
-  min-height: min(70svh, 56rem);
+.app-shell__container {
+  width: min(var(--container-width), 100% - var(--s-5));
+  margin-inline: auto;
 }
 
-@media (max-width: 520px) {
-  .app-shell__header .app-shell__container {
-    flex-wrap: wrap;
-    justify-content: center;
+@media (max-width: 900px) {
+  .app-shell__sidenav {
+    width: min(80vw, 280px);
   }
+}
 
-  .app-shell__content {
-    padding: 1rem;
+@media (min-width: 901px) {
+  .app-shell__menu {
+    display: none;
   }
 }

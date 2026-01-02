@@ -1,32 +1,32 @@
 <section class="page">
   <header class="page__header">
-    <h1 class="page__title">Entries</h1>
-    <p class="page__subtitle">Lista degli scritti salvati.</p>
+    <h1 class="page__title">I tuoi scritti</h1>
+    <p class="page__subtitle">Raccolta personale delle entries salvate.</p>
   </header>
 
   <div class="page__body">
     <section class="entries" aria-label="Lista entries">
       <header class="entries__header">
-        <h2 class="entries__heading">I tuoi scritti</h2>
-        <p class="entries__meta">Apri un elemento per leggere il dettaglio.</p>
+        <h2 class="entries__heading">Archivio</h2>
+        <p class="entries__meta">Apri un elemento per leggere il dettaglio completo.</p>
       </header>
 
       <div class="entries__content">
         @if (isLoading()) {
-        <div class="entries-empty" role="status">
-          <div class="entries-empty__content">
+        <mat-card class="entries-empty" role="status">
+          <mat-card-content>
             <div class="entries-empty__title">Caricamento</div>
             <div class="entries-empty__text">Sto recuperando le entries...</div>
-          </div>
-        </div>
+          </mat-card-content>
+        </mat-card>
         } @else if (errorMessage()) {
-        <div class="entries-empty" role="alert">
-          <div class="entries-empty__content">
+        <mat-card class="entries-empty" role="alert">
+          <mat-card-content>
             <div class="entries-empty__title">Errore</div>
             <div class="entries-empty__text">{{ errorMessage() }}</div>
-            <a class="entries-empty__cta" routerLink="/">Torna a Write</a>
-          </div>
-        </div>
+            <a class="entries-empty__cta" routerLink="/">Torna a Scrivi</a>
+          </mat-card-content>
+        </mat-card>
         } @else if (entryPreviewList().length > 0) {
         <ul class="entries-list" aria-label="Entries" role="list">
           @for (ep of entryPreviewList(); track ep.id) {
@@ -35,13 +35,13 @@
         </ul>
 
         } @else {
-        <div class="entries-empty" role="note">
-          <div class="entries-empty__content">
+        <mat-card class="entries-empty" role="note">
+          <mat-card-content>
             <div class="entries-empty__title">Ancora nessuna entry</div>
             <div class="entries-empty__text">Scrivi la prima entry e poi torna qui.</div>
-            <a class="entries-empty__cta" routerLink="/">Vai a Write</a>
-          </div>
-        </div>
+            <a class="entries-empty__cta" routerLink="/">Vai a Scrivi</a>
+          </mat-card-content>
+        </mat-card>
 
         }
       </div>

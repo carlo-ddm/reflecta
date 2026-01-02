@@ -1,162 +1,55 @@
 <section class="page">
   <header class="page__header">
     <h1 class="page__title">Scrivi</h1>
+    <p class="page__subtitle">Trasforma i pensieri in entries salvate con calma.</p>
   </header>
 
   <div class="page__body">
-    <form
-      class="editor"
-      aria-label="Editor di scrittura"
-      novalidate
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()"
-    >
-      <div class="editor__surface">
-        <label class="editor__label" for="entry-text">Testo</label>
-        <textarea
-          class="editor__textarea"
-          id="entry-text"
-          name="entry-text"
-          placeholder="Scrivi liberamente…"
-          autocomplete="off"
-          autocapitalize="sentences"
-          spellcheck="true"
-          formControlName="entry-text"
-        ></textarea>
-      </div>
+    <mat-card class="editor-card">
+      <mat-card-content>
+        <form
+          class="editor"
+          aria-label="Editor di scrittura"
+          novalidate
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()"
+        >
+          <mat-form-field appearance="outline" class="editor__field">
+            <mat-label>Testo</mat-label>
+            <textarea
+              matInput
+              id="entry-text"
+              name="entry-text"
+              placeholder="Scrivi liberamente..."
+              autocomplete="off"
+              autocapitalize="sentences"
+              spellcheck="true"
+              formControlName="entry-text"
+              rows="12"
+            ></textarea>
+          </mat-form-field>
 
-      <div class="editor__actions" aria-label="Azioni (placeholder)">
-        <app-button
-          [config]="{
-            type: 'button',
-            text: 'Analizza',
-            variant: 'secondary',
-            disabled: !hasContent || !hasAuthorId
-          }"
-          (clicked)="onAnalysisButtonClick(true)"
-        />
-        <app-button
-          [config]="{ type: 'submit', text: 'Invia', disabled: !hasContent || !hasAuthorId }"
-        />
-      </div>
-    </form>
+          <div class="editor__actions" aria-label="Azioni">
+            <button
+              mat-tonal-button
+              type="button"
+              [disabled]="!hasContent || !hasAuthorId"
+              (click)="openAnalysisDialog()"
+            >
+              Analizza
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="!hasContent || !hasAuthorId"
+            >
+              Invia
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    <p class="page__note">Serve l'Author ID nelle Impostazioni per salvare nuove entries.</p>
   </div>
 </section>
-
-@if (isAnalysisDialogOpen()) {
-<section class="analysis-modal" aria-label="Analisi">
-  <div class="analysis-modal__backdrop" aria-hidden="true"></div>
-
-  <div
-    class="analysis-modal__dialog"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="analysis-title"
-  >
-    <header class="analysis-modal__header">
-      <div class="analysis-modal__title-wrap">
-        <h2 class="analysis-modal__title" id="analysis-title">Analisi (checkpoint)</h2>
-        <p class="analysis-modal__subtitle">L'analisi verra calcolata e salvata alla conferma.</p>
-      </div>
-
-      <app-button
-        [config]="{ text: 'Torna a scrivere', variant: 'secondary' }"
-        (clicked)="onAnalysisButtonClick(false)"
-      />
-    </header>
-
-    <div class="analysis-modal__content">
-      <section class="analysis-profile" aria-label="Profilo">
-        <div class="analysis-profile__grid" role="list">
-          <div class="analysis-metric" role="listitem">
-            <div class="analysis-metric__label">Energy</div>
-            <div class="analysis-metric__value">—</div>
-            <div class="analysis-metric__bar" aria-hidden="true">
-              <span style="--pct: 40%"></span>
-            </div>
-          </div>
-          <div class="analysis-metric" role="listitem">
-            <div class="analysis-metric__label">Mood</div>
-            <div class="analysis-metric__value">—</div>
-            <div class="analysis-metric__bar" aria-hidden="true">
-              <span style="--pct: 55%"></span>
-            </div>
-          </div>
-          <div class="analysis-metric" role="listitem">
-            <div class="analysis-metric__label">Clarity</div>
-            <div class="analysis-metric__value">—</div>
-            <div class="analysis-metric__bar" aria-hidden="true">
-              <span style="--pct: 62%"></span>
-            </div>
-          </div>
-          <div class="analysis-metric" role="listitem">
-            <div class="analysis-metric__label">Stress</div>
-            <div class="analysis-metric__value">—</div>
-            <div class="analysis-metric__bar" aria-hidden="true">
-              <span style="--pct: 28%"></span>
-            </div>
-          </div>
-          <div class="analysis-metric" role="listitem">
-            <div class="analysis-metric__label">Focus</div>
-            <div class="analysis-metric__value">—</div>
-            <div class="analysis-metric__bar" aria-hidden="true">
-              <span style="--pct: 47%"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="analysis-chart" aria-label="Grafico (placeholder)">
-          <div class="analysis-chart__frame" aria-hidden="true">
-            <div class="analysis-chart__ring"></div>
-            <div class="analysis-chart__ring"></div>
-            <div class="analysis-chart__ring"></div>
-            <div class="analysis-chart__dot"></div>
-          </div>
-          <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
-        </div>
-      </section>
-    </div>
-
-    <footer class="analysis-modal__footer" aria-label="Azioni">
-      <button class="analysis-modal__btn" type="button" (click)="onAnalysisButtonClick(false)">
-        Annulla
-      </button>
-      <button
-        class="analysis-modal__btn analysis-modal__btn--primary"
-        type="button"
-        [disabled]="!hasContent || !hasAuthorId"
-        (click)="onSubmitAnalysis()"
-      >
-        Salva
-      </button>
-    </footer>
-  </div>
-</section>
-} @if (snackbar()?.snackbarIsOpen) {
-<app-snackbar>
-  <div snackbarTitle>
-    <h1>{{ snackbar()?.snackbarTitle }}</h1>
-  </div>
-  <div snackbarMessage>
-    <p>{{ snackbar()?.snackbarMessage }}</p>
-  </div>
-  <div snackbarAction>
-    <button class="btn btn--primary" type="button" (click)="onCloseSnackbar(true)">
-      <span>
-        {{ snackbar()?.snackbarAction }}
-      </span>
-    </button>
-  </div>
-  <div snackbarDismiss>
-    <button
-      class="snackbar__btn snackbar__btn--ghost"
-      type="button"
-      (click)="onCloseSnackbar(false)"
-    >
-      <span>
-        {{ snackbar()?.snackbarDismiss }}
-      </span>
-    </button>
-  </div>
-</app-snackbar>
-}

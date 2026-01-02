@@ -1,0 +1,193 @@
+:root {
+  --snackbar-bg: #1b1f25;
+  --snackbar-fg: #f7fafc;
+}
+
+.dark {
+  --snackbar-bg: #eef2f6;
+  --snackbar-fg: #0e1116;
+}
+
+.mat-mdc-button-base {
+  border-radius: var(--r-pill) !important;
+  transition: background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.mat-mdc-button-base:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.mat-mdc-button-base:active {
+  transform: translateY(1px);
+}
+
+.mat-mdc-unelevated-button,
+.mat-mdc-tonal-button {
+  box-shadow: var(--sh-1);
+}
+
+.mat-mdc-unelevated-button:active,
+.mat-mdc-tonal-button:active {
+  box-shadow: none;
+}
+
+.mat-mdc-button-base[disabled],
+.mat-mdc-button-base.mat-mdc-button-disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (hover: hover) {
+  .mat-mdc-unelevated-button:hover,
+  .mat-mdc-tonal-button:hover {
+    box-shadow: var(--sh-2);
+  }
+}
+
+.mat-mdc-outlined-button {
+  border-color: var(--border);
+}
+
+.mat-mdc-card {
+  border-radius: var(--r-2);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--sh-1);
+  transition: box-shadow var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .mat-mdc-card:hover {
+    box-shadow: var(--sh-2);
+    transform: translateY(-2px);
+  }
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined {
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-focus-outline-color: var(--accent);
+  --mdc-outlined-text-field-hover-outline-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+  --mdc-outlined-text-field-container-shape: var(--r-2);
+}
+
+.mat-mdc-form-field .mdc-text-field__input {
+  caret-color: var(--accent);
+}
+
+.mat-mdc-form-field .mdc-floating-label,
+.mat-mdc-form-field .mdc-floating-label--float-above {
+  color: var(--muted);
+}
+
+.mat-mdc-form-field .mat-mdc-form-field-hint,
+.mat-mdc-form-field .mat-mdc-form-field-error {
+  font-size: var(--fs-2);
+}
+
+.mat-mdc-form-field .mat-mdc-form-field-error {
+  color: var(--danger);
+}
+
+.mat-toolbar {
+  background: var(--surface);
+  color: var(--fg);
+  border-bottom: 1px solid var(--border);
+}
+
+.mat-sidenav-container {
+  background: transparent;
+}
+
+.mat-sidenav {
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+}
+
+.mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: var(--r-pill);
+  margin: 2px 8px;
+}
+
+.mat-mdc-list-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.app-shell__nav-item--active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.app-shell__nav-item--active .mdc-list-item__primary-text {
+  font-weight: var(--fw-semibold);
+}
+
+.cdk-overlay-backdrop {
+  background: rgba(14, 17, 22, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+.mat-mdc-dialog-container {
+  border-radius: var(--r-3);
+  box-shadow: var(--sh-2);
+  animation: rf-dialog-in var(--t-fast) var(--ease);
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: var(--r-3);
+  padding: var(--s-5);
+  background: var(--surface);
+}
+
+.mat-mdc-snack-bar-container.rf-snackbar {
+  background: var(--snackbar-bg);
+  color: var(--snackbar-fg);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--sh-2);
+  border-radius: var(--r-2);
+}
+
+.mat-mdc-snack-bar-container.rf-snackbar--success {
+  border-left-color: var(--success);
+}
+
+.mat-mdc-snack-bar-container.rf-snackbar--warn {
+  border-left-color: var(--warning);
+}
+
+.mat-mdc-snack-bar-container.rf-snackbar--danger {
+  border-left-color: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mat-mdc-button-base,
+  .mat-mdc-card,
+  .mat-mdc-list-item,
+  .mat-mdc-dialog-container,
+  .mat-mdc-snack-bar-container {
+    transition: none !important;
+  }
+}
+
+@keyframes rf-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -1,29 +1,76 @@
-<div class="app-shell">
+<mat-sidenav-container class="app-shell">
   <a class="app-shell__skip" href="#main">Skip to content</a>
 
-  <header class="app-shell__header">
-    <div class="app-shell__container">
-      <a class="app-shell__brand" routerLink="/">Reflecta</a>
-
-      <nav class="app-shell__nav" aria-label="Primary">
-        <a class="app-shell__nav-link" routerLink="/">Scrivi</a>
-        <a class="app-shell__nav-link" routerLink="/entries">I tuoi scritti</a>
-        <a class="app-shell__nav-link" routerLink="/settings" aria-label="Impostazioni">
-          <svg class="app-shell__nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+  <mat-sidenav
+    class="app-shell__sidenav"
+    [mode]="sidenavMode()"
+    [opened]="sidenavOpened()"
+  >
+    <a class="app-shell__brand" routerLink="/">Reflecta</a>
+    <mat-nav-list class="app-shell__nav" aria-label="Primary">
+      <a
+        mat-list-item
+        [disableRipple]="true"
+        routerLink="/"
+        routerLinkActive="app-shell__nav-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeSidenavOnMobile()"
+      >
+        Scrivi
+      </a>
+      <a
+        mat-list-item
+        [disableRipple]="true"
+        routerLink="/entries"
+        routerLinkActive="app-shell__nav-item--active"
+        (click)="closeSidenavOnMobile()"
+      >
+        I tuoi scritti
+      </a>
+      <a
+        mat-list-item
+        [disableRipple]="true"
+        routerLink="/settings"
+        routerLinkActive="app-shell__nav-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeSidenavOnMobile()"
+      >
+        <span class="app-shell__nav-icon" matListItemIcon aria-hidden="true">
+          <svg viewBox="0 0 24 24">
             <path
               d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.1 7.1 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54a7.1 7.1 0 0 0-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.7 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.05.31-.08.63-.08.94s.03.63.08.94L2.82 14.5a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.5.38 1.05.7 1.63.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.58-.24 1.13-.56 1.63-.94l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.56zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"
               fill="currentColor"
             />
           </svg>
-          Impostazioni
-        </a>
-      </nav>
-    </div>
-  </header>
+        </span>
+        Impostazioni
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-  <main class="app-shell__main" id="main">
-    <div class="app-shell__container app-shell__content">
-      <router-outlet />
-    </div>
-  </main>
-</div>
+  <mat-sidenav-content>
+    <mat-toolbar class="app-shell__toolbar">
+      <button
+        mat-icon-button
+        class="app-shell__menu"
+        type="button"
+        aria-label="Apri navigazione"
+        (click)="toggleSidenav()"
+      >
+        <svg class="app-shell__menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 6h16v2H4zM4 11h16v2H4zM4 16h16v2H4z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <span class="app-shell__toolbar-title">{{ title() }}</span>
+    </mat-toolbar>
+
+    <main class="app-shell__main" id="main">
+      <div class="app-shell__container">
+        <router-outlet />
+      </div>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
