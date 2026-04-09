@@ -27,6 +27,9 @@
               formControlName="entry-text"
               rows="12"
             ></textarea>
+            <mat-hint align="end" [class.editor__hint--warn]="isNearLimit" [class.editor__hint--danger]="isOverLimit">
+              {{ charCount }} / {{ MAX_CONTENT_LENGTH }}
+            </mat-hint>
           </mat-form-field>
 
           <div class="editor__actions" aria-label="Azioni">
@@ -34,19 +37,19 @@
               mat-tonal-button
               class="rf-button rf-button--tonal"
               type="button"
-              [disabled]="!hasContent || !hasAuthorId"
+              [disabled]="!canSubmit"
               (click)="openAnalysisDialog()"
             >
-              Analizza
+              {{ isSubmitting() ? 'Analizzo...' : 'Analizza' }}
             </button>
             <button
               mat-flat-button
               color="primary"
               class="rf-button rf-button--primary"
               type="submit"
-              [disabled]="!hasContent || !hasAuthorId"
+              [disabled]="!canSubmit"
             >
-              Invia
+              {{ isSubmitting() ? 'Salvo...' : 'Invia' }}
             </button>
           </div>
         </form>

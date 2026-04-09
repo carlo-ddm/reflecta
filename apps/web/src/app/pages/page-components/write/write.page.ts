@@ -36,14 +36,32 @@ export class WritePage {
     ['entry-text']: new FormControl(''),
   });
   authorId = signal<string>(getAuthorId());
+  isSubmitting = signal(false);
+  readonly MAX_CONTENT_LENGTH = 5000;
+
+  get charCount(): number {
+    const value = this.form.get('entry-text')?.value ?? '';
+    return String(value).trim().length;
+  }
+
+  get isOverLimit(): boolean {
+    return this.charCount > this.MAX_CONTENT_LENGTH;
+  }
+
+  get isNearLimit(): boolean {
+    return this.charCount > this.MAX_CONTENT_LENGTH * 0.9;
+  }
 
   get hasContent(): boolean {
-    const value = this.form.get('entry-text')?.value ?? '';
-    return String(value).trim().length > 0;
+    return this.charCount > 0;
   }
 
   get hasAuthorId(): boolean {
     return Boolean(this.authorId().trim());
+  }
+
+  get canSubmit(): boolean {
+    return this.hasContent && this.hasAuthorId && !this.isOverLimit && !this.isSubmitting();
   }
 
   openAnalysisDialog() {
@@ -78,6 +96,8 @@ export class WritePage {
       return;
     }
 
+    this.isSubmitting.set(true);
+
     firstValueFrom(
       this.pageService.createEntry({
         authorId,
@@ -90,6 +110,9 @@ export class WritePage {
       })
       .catch(() => {
         this.showSnack('Impossibile salvare l\'entry.', 'danger');
+      })
+      .finally(() => {
+        this.isSubmitting.set(false);
       });
   }
 
@@ -110,19 +133,24 @@ export class WritePage {
       return;
     }
 
+    this.isSubmitting.set(true);
+
     firstValueFrom(
       this.pageService.createEntry({
         authorId,
         content,
+        analyze: true,
       }),
     )
-      .then((entry) => firstValueFrom(this.pageService.requestAnalysis(entry.id)))
       .then(() => {
         this.form.reset();
         this.showSnack('Entry salvata con analisi.', 'success', 'Vai a Entries');
       })
       .catch(() => {
         this.showSnack('Impossibile completare l\'analisi.', 'danger');
+      })
+      .finally(() => {
+        this.isSubmitting.set(false);
       });
   }
 

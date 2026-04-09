@@ -71,5 +71,54 @@
         </p>
       </mat-card-content>
     </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>Tema</mat-card-title>
+        <mat-card-subtitle>Scegli il tema dell'interfaccia.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="theme-options" role="radiogroup" aria-label="Tema">
+          <button
+            class="theme-option"
+            [class.theme-option--active]="themePreference() === 'light'"
+            type="button"
+            role="radio"
+            [attr.aria-checked]="themePreference() === 'light'"
+            (click)="setTheme('light')"
+          >
+            <svg class="theme-option__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Light</span>
+          </button>
+          <button
+            class="theme-option"
+            [class.theme-option--active]="themePreference() === 'dark'"
+            type="button"
+            role="radio"
+            [attr.aria-checked]="themePreference() === 'dark'"
+            (click)="setTheme('dark')"
+          >
+            <svg class="theme-option__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Dark</span>
+          </button>
+          <button
+            class="theme-option"
+            [class.theme-option--active]="themePreference() === 'system'"
+            type="button"
+            role="radio"
+            [attr.aria-checked]="themePreference() === 'system'"
+            (click)="setTheme('system')"
+          >
+            <svg class="theme-option__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6zm6 14h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>System</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </section>

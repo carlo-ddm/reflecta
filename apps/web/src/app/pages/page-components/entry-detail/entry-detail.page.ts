@@ -37,6 +37,8 @@ export class EntryDetailPage implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   entry = signal<EntryDetail | null>(null);
+  isLoading = signal(true);
+  hasError = signal(false);
   hasAnalysis = computed(() => Boolean(this.entry()?.analysis));
   isDeleting = signal(false);
 
@@ -55,13 +57,44 @@ export class EntryDetailPage implements OnInit {
         label: ANALYSIS_METRIC_LABELS[key],
         value: percent,
         pct: percent,
+        score: rawScore ?? 0,
       };
     });
   });
 
+  radarAxes = computed(() => {
+    const cx = 100, cy = 100, r = 90;
+    const metrics = this.analysisMetrics();
+    const n = metrics.length || 5;
+    return Array.from({ length: n }, (_, i) => {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    });
+  });
+
+  radarPoints = computed(() => {
+    const cx = 100, cy = 100, r = 90;
+    const metrics = this.analysisMetrics();
+    if (metrics.length === 0) return null;
+    const n = metrics.length;
+    return metrics
+      .map((m, i) => {
+        const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+        const val = m.score * r;
+        const x = cx + val * Math.cos(angle);
+        const y = cy + val * Math.sin(angle);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(' ');
+  });
+
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
-    if (!id) return;
+    if (!id) {
+      this.isLoading.set(false);
+      this.hasError.set(true);
+      return;
+    }
 
     firstValueFrom(this.entryService.getEntry(id))
       .then((entry) => {
@@ -72,6 +105,10 @@ export class EntryDetailPage implements OnInit {
       })
       .catch(() => {
         this.entry.set(null);
+        this.hasError.set(true);
+      })
+      .finally(() => {
+        this.isLoading.set(false);
       });
   }
 

@@ -8,12 +8,22 @@
     <section class="entries" aria-label="Lista entries">  
       <div class="entries__content">
         @if (isLoading()) {
-        <mat-card class="entries-empty" role="status">
-          <mat-card-content>
-            <div class="entries-empty__title">Caricamento</div>
-            <div class="entries-empty__text">Sto recuperando le entries...</div>
-          </mat-card-content>
-        </mat-card>
+        <ul class="entries-list entries-list--skeleton" aria-label="Caricamento" role="status">
+          @for (i of [1, 2, 3]; track i) {
+          <li class="entries-list__item">
+            <mat-card class="skeleton-card">
+              <mat-card-content>
+                <div class="skeleton-card__top">
+                  <div class="skeleton-line skeleton-line--date"></div>
+                  <div class="skeleton-line skeleton-line--badge"></div>
+                </div>
+                <div class="skeleton-line skeleton-line--text"></div>
+                <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+              </mat-card-content>
+            </mat-card>
+          </li>
+          }
+        </ul>
         } @else if (errorMessage()) {
         <mat-card class="entries-empty" role="alert">
           <mat-card-content>
@@ -28,6 +38,20 @@
           <app-entry-card [entry]="ep" [link]="['/entries', ep.id]"></app-entry-card>
           }
         </ul>
+
+        @if (hasMore()) {
+        <div class="entries__load-more">
+          <button
+            mat-stroked-button
+            class="rf-button rf-button--tonal"
+            type="button"
+            [disabled]="isLoadingMore()"
+            (click)="onLoadMore()"
+          >
+            {{ isLoadingMore() ? 'Carico...' : 'Carica altro' }}
+          </button>
+        </div>
+        }
 
         } @else {
         <mat-card class="entries-empty" role="note">
