@@ -16,19 +16,37 @@ export async function createEntry(input: CreateEntryInput) {
   });
 }
 
-export async function getEntries() {
-  return prisma.entry.findMany({
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      createdAt: true,
-      snippet: true,
-      authorId: true,
-      analysis: {
-        select: { id: true },
+export interface GetEntriesOptions {
+  authorId?: string;
+  page?: number;
+  limit?: number;
+}
+
+export async function getEntries(options: GetEntriesOptions = {}) {
+  const { authorId, page = 1, limit = 20 } = options;
+  const where = authorId ? { authorId } : {};
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    prisma.entry.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        createdAt: true,
+        snippet: true,
+        authorId: true,
+        analysis: {
+          select: { id: true },
+        },
       },
-    },
-  });
+    }),
+    prisma.entry.count({ where }),
+  ]);
+
+  return { data, total, page, limit };
 }
 
 export async function getEntryById(id: string) {
@@ -45,25 +63,14 @@ export async function getEntryById(id: string) {
 export async function deleteEntryById(id: string) {
   const entry = await prisma.entry.findUnique({
     where: { id },
-    include: {
-      analysis: {
-        select: { id: true },
-      },
-    },
+    select: { id: true },
   });
 
   if (!entry) {
     return null;
   }
 
-  await prisma.$transaction(async (tx) => {
-    if (entry.analysis) {
-      await tx.metricScore.deleteMany({ where: { analysisId: entry.analysis.id } });
-      await tx.analysis.delete({ where: { id: entry.analysis.id } });
-    }
-
-    await tx.entry.delete({ where: { id } });
-  });
+  await prisma.entry.delete({ where: { id } });
 
   return entry;
 }

@@ -78,3 +78,60 @@
   display: grid;
   gap: var(--s-4);
 }
+
+.entries__load-more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--s-3);
+}
+
+/* Skeleton loading */
+
+.skeleton-card mat-card-content {
+  padding: var(--s-4);
+  display: grid;
+  gap: var(--s-3);
+}
+
+.skeleton-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeleton-line {
+  border-radius: var(--r-1);
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    color-mix(in srgb, var(--surface-2) 60%, var(--border)) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-line--date {
+  height: 0.875rem;
+  width: 45%;
+}
+
+.skeleton-line--badge {
+  height: 1.25rem;
+  width: 5rem;
+  border-radius: var(--r-pill);
+}
+
+.skeleton-line--text {
+  height: 0.875rem;
+  width: 100%;
+}
+
+.skeleton-line--short {
+  width: 55%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

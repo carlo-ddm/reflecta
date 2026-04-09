@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import { createAnalysis } from '../analysis.repository.js';
+import { computeMetrics } from '../analysis.utils.js';
 import { toEntryDetailDto, toEntryListItemDto } from '../dtos/entry.dto.js';
 import { createEntry, deleteEntryById, getEntries, getEntryById } from '../entry.repository.js';
 import { HttpError } from '../middlewares/error-handler.js';
@@ -14,10 +15,24 @@ const isNonEmptyString = (value: unknown): value is string => typeof value === '
 const isValidUlid = (value: string) => /^[0-9A-HJKMNP-TV-Z]{26}$/i.test(value);
 const isValidScore = (value: number) => value >= 0 && value <= 1;
 
-entriesRouter.get('/entries', async (_req, res, next) => {
+entriesRouter.get('/entries', async (req, res, next) => {
   try {
-    const entries = await getEntries();
-    res.status(200).json(entries.map(toEntryListItemDto));
+    const authorId = typeof req.query.authorId === 'string' ? req.query.authorId.trim() : undefined;
+    if (authorId && !isValidUlid(authorId)) {
+      return next(new HttpError(400, 'authorId is invalid'));
+    }
+
+    const rawPage = Number(req.query.page);
+    const rawLimit = Number(req.query.limit);
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
+    const limit = Number.isFinite(rawLimit) && rawLimit >= 1 && rawLimit <= 100 ? Math.floor(rawLimit) : 20;
+
+    const result = await getEntries({ authorId, page, limit });
+
+    res.status(200).json({
+      data: result.data.map(toEntryListItemDto),
+      meta: { page: result.page, limit: result.limit, total: result.total },
+    });
   } catch (error) {
     next(error);
   }
@@ -54,7 +69,7 @@ entriesRouter.post('/entries', async (req, res, next) => {
     return next(new HttpError(400, 'Invalid JSON body'));
   }
 
-  const { authorId, content, snippet, analysis } = body as Record<string, unknown>;
+  const { authorId, content, snippet, analysis, analyze } = body as Record<string, unknown>;
 
   if (!isNonEmptyString(authorId)) {
     return next(new HttpError(400, 'authorId is required'));
@@ -82,7 +97,9 @@ entriesRouter.post('/entries', async (req, res, next) => {
 
   let normalizedMetrics: Array<{ key: AnalysisMetric; score: number }> | null = null;
 
-  if (analysis !== undefined) {
+  if (analyze === true) {
+    normalizedMetrics = computeMetrics(normalizedContent);
+  } else if (analysis !== undefined) {
     if (!analysis || typeof analysis !== 'object') {
       return next(new HttpError(400, 'analysis must be an object'));
     }

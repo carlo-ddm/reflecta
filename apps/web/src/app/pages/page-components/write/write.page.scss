@@ -41,6 +41,15 @@
   padding-top: var(--s-3);
 }
 
+.editor__hint--warn {
+  color: var(--warning) !important;
+}
+
+.editor__hint--danger {
+  color: var(--danger) !important;
+  font-weight: var(--fw-medium);
+}
+
 .page__note {
   margin: 0;
   font-size: var(--fs-2);

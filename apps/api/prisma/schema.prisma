@@ -42,16 +42,16 @@ model Entry {
 model Analysis {
   id        String        @id @default(ulid())
   createdAt DateTime      @default(now())
-  entry     Entry         @relation(fields: [entryId], references: [id])
+  entry     Entry         @relation(fields: [entryId], references: [id], onDelete: Cascade)
   entryId   String        @unique
-  metrics   MetricScore[] 
+  metrics   MetricScore[]
 }
 
 model MetricScore {
   id         String         @id @default(ulid())
-  analysis   Analysis       @relation(fields: [analysisId], references: [id])
+  analysis   Analysis       @relation(fields: [analysisId], references: [id], onDelete: Cascade)
   analysisId String
   key        AnalysisMetric
   score      Float
-  @@unique([analysisId, key]) 
+  @@unique([analysisId, key])
 }

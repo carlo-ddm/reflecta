@@ -1,3 +1,32 @@
+@if (isLoading()) {
+<section class="page">
+  <div class="page__body">
+    <div class="entry-detail__layout">
+      <mat-card class="entry-detail">
+        <mat-card-content>
+          <div class="skeleton-block skeleton-block--meta"></div>
+          <div class="skeleton-block skeleton-block--text"></div>
+          <div class="skeleton-block skeleton-block--text skeleton-block--short"></div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+} @else if (hasError()) {
+<section class="page">
+  <div class="page__body">
+    <mat-card class="entry-detail-error" role="alert">
+      <mat-card-content>
+        <div class="entry-detail-error__title">Errore</div>
+        <div class="entry-detail-error__text">Impossibile caricare l'entry.</div>
+        <a class="entry-detail-error__cta rf-button rf-button--tonal" routerLink="/entries">
+          Torna alla lista
+        </a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+} @else {
 <section class="page">
   <header class="page__header">
     <div class="page__header-row">
@@ -67,14 +96,25 @@
               }
             </div>
 
-            <div class="analysis-chart" aria-label="Grafico (placeholder)">
-              <div class="analysis-chart__frame" aria-hidden="true">
-                <div class="analysis-chart__ring"></div>
-                <div class="analysis-chart__ring"></div>
-                <div class="analysis-chart__ring"></div>
-                <div class="analysis-chart__dot"></div>
+            <div class="analysis-chart" aria-label="Grafico radar delle metriche">
+              <svg class="analysis-chart__svg" viewBox="0 0 200 200" aria-hidden="true">
+                <polygon class="analysis-chart__grid" points="100,10 185,55 171,150 29,150 15,55" />
+                <polygon class="analysis-chart__grid" points="100,37 159,66 148,132 52,132 41,66" />
+                <polygon class="analysis-chart__grid" points="100,64 133,78 126,113 74,113 67,78" />
+                @if (radarPoints()) {
+                <polygon class="analysis-chart__data" [attr.points]="radarPoints()" />
+                }
+                @for (metric of analysisMetrics(); track metric.key; let i = $index) {
+                <line class="analysis-chart__axis"
+                  x1="100" y1="100"
+                  [attr.x2]="radarAxes()[i]?.x" [attr.y2]="radarAxes()[i]?.y" />
+                }
+              </svg>
+              <div class="analysis-chart__labels" aria-hidden="true">
+                @for (metric of analysisMetrics(); track metric.key) {
+                <span class="analysis-chart__label">{{ metric.label }}</span>
+                }
               </div>
-              <p class="analysis-chart__hint">Grafico minimale (placeholder)</p>
             </div>
           </div>
         </mat-card-content>
@@ -86,3 +126,4 @@
     </div>
   </div>
 </section>
+}

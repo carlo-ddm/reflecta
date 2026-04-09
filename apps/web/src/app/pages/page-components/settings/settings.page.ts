@@ -5,7 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { getAuthorId, setAuthorId } from '../../../config/api.config';
+import {
+  getAuthorId,
+  setAuthorId,
+  getThemePreference,
+  setThemePreference,
+  type ThemePreference,
+} from '../../../config/api.config';
 import { ConfirmDialog } from '../../../ui/ui-components/confirm-dialog/confirm-dialog.ui';
 
 @Component({
@@ -26,6 +32,7 @@ export class SettingsPage {
   private dialog = inject(MatDialog);
   authorIdControl = new FormControl(getAuthorId());
   authorIdVisible = signal<boolean>(false);
+  themePreference = signal<ThemePreference>(getThemePreference());
 
   get authorIdInputType(): string {
     return this.authorIdVisible() ? 'text' : 'password';
@@ -86,5 +93,10 @@ export class SettingsPage {
   private confirmRemoveAuthorId() {
     setAuthorId('');
     this.authorIdControl.setValue('');
+  }
+
+  setTheme(theme: ThemePreference) {
+    this.themePreference.set(theme);
+    setThemePreference(theme);
   }
 }
