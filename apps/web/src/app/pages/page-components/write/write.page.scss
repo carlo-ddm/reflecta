@@ -1,44 +1,29 @@
-.page {
-  display: grid;
-  gap: var(--s-5);
-}
-
-.page__header {
-  display: grid;
-  gap: var(--s-2);
-}
-
-.page__title {
-  font-size: clamp(2rem, 4vw, 2.75rem);
-  letter-spacing: -0.02em;
-}
-
-.page__subtitle {
-  margin: 0;
-  color: var(--muted);
-  max-width: 64ch;
-}
-
-.page__body {
-  display: grid;
-  gap: var(--s-4);
-}
-
 .editor-card {
-  padding: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--r-4);
+}
+
+.editor {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.editor__meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
 }
 
 .editor__field textarea {
-  min-height: min(58vh, 32rem);
+  min-height: min(56vh, 30rem);
   line-height: var(--lh-loose);
   font-size: var(--fs-4);
+  font-family: var(--font-serif);
 }
 
-.editor__actions {
-  display: flex;
-  gap: var(--s-3);
-  justify-content: flex-end;
-  padding-top: var(--s-3);
+.editor__title-field ::ng-deep .mat-mdc-form-field-infix input {
+  font-family: var(--font-serif);
+  font-size: var(--fs-4);
 }
 
 .editor__hint--warn {
@@ -50,8 +35,19 @@
   font-weight: var(--fw-medium);
 }
 
-.page__note {
-  margin: 0;
-  font-size: var(--fs-2);
-  color: var(--muted);
+.editor__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--s-2);
+}
+
+@media (min-width: 640px) {
+  .editor-card {
+    padding: var(--s-4);
+  }
+
+  .editor__meta {
+    grid-template-columns: 1fr 13rem;
+    align-items: start;
+  }
 }

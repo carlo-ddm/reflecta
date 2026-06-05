@@ -1,47 +1,61 @@
-<section class="page">
+<section class="page write">
   <header class="page__header">
+    <p class="page__eyebrow">Diario</p>
     <h1 class="page__title">Scrivi</h1>
-    <p class="page__subtitle">Trasforma i pensieri in parole.</p>
+    <p class="page__subtitle">Un momento per te. Dai un titolo, scegli il giorno e lascia andare i pensieri.</p>
   </header>
+
+  @if (!hasAuthorId) {
+  <div class="notice" role="note">
+    <span class="notice__text">Imposta il tuo Author ID nelle Impostazioni per iniziare a scrivere.</span>
+    <a class="rf-button rf-button--tonal notice__cta" routerLink="/settings">Vai alle Impostazioni</a>
+  </div>
+  }
 
   <div class="page__body">
     <mat-card class="editor-card">
       <mat-card-content>
-        <form
-          class="editor"
-          aria-label="Editor di scrittura"
-          novalidate
-          [formGroup]="form"
-          (ngSubmit)="onSubmit()"
-        >
+        <form class="editor" aria-label="Nuova voce di diario" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="editor__meta">
+            <mat-form-field appearance="outline" class="editor__title-field">
+              <mat-label>Titolo</mat-label>
+              <input
+                matInput
+                type="text"
+                name="title"
+                placeholder="Un titolo per oggi…"
+                autocomplete="off"
+                autocapitalize="sentences"
+                [maxlength]="MAX_TITLE_LENGTH"
+                formControlName="title"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="editor__date-field">
+              <mat-label>Data</mat-label>
+              <input matInput type="date" name="date" formControlName="date" />
+            </mat-form-field>
+          </div>
+
           <mat-form-field appearance="outline" class="editor__field">
-            <mat-label>Testo</mat-label>
+            <mat-label>Il tuo pensiero</mat-label>
             <textarea
               matInput
               id="entry-text"
               name="entry-text"
-              placeholder="Scrivi liberamente..."
+              placeholder="Scrivi liberamente…"
               autocomplete="off"
               autocapitalize="sentences"
               spellcheck="true"
-              formControlName="entry-text"
-              rows="12"
+              formControlName="content"
+              rows="14"
             ></textarea>
             <mat-hint align="end" [class.editor__hint--warn]="isNearLimit" [class.editor__hint--danger]="isOverLimit">
               {{ charCount }} / {{ MAX_CONTENT_LENGTH }}
             </mat-hint>
           </mat-form-field>
 
-          <div class="editor__actions" aria-label="Azioni">
-            <button
-              mat-tonal-button
-              class="rf-button rf-button--tonal"
-              type="button"
-              [disabled]="!canSubmit"
-              (click)="openAnalysisDialog()"
-            >
-              {{ isSubmitting() ? 'Analizzo...' : 'Analizza' }}
-            </button>
+          <div class="editor__actions">
             <button
               mat-flat-button
               color="primary"
@@ -49,12 +63,11 @@
               type="submit"
               [disabled]="!canSubmit"
             >
-              {{ isSubmitting() ? 'Salvo...' : 'Invia' }}
+              {{ isSubmitting() ? 'Salvo…' : 'Salva nel diario' }}
             </button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
-    <p class="page__note">Serve l'Author ID nelle Impostazioni per salvare nuove entries.</p>
   </div>
 </section>

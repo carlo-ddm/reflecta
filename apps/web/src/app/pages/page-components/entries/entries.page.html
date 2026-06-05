@@ -1,69 +1,106 @@
 <section class="page">
   <header class="page__header">
+    <p class="page__eyebrow">Diario</p>
     <h1 class="page__title">Archivio</h1>
-    <p class="page__subtitle">Apri un elemento per leggere il dettaglio completo.</p>
+    <p class="page__subtitle">Rileggi i tuoi giorni. Cerca per titolo o filtra per periodo.</p>
   </header>
 
+  <form class="search" [formGroup]="form" (ngSubmit)="$event.preventDefault()" aria-label="Cerca tra le voci">
+    <mat-form-field appearance="outline" class="search__query">
+      <mat-label>Cerca per titolo</mat-label>
+      <span matPrefix class="search__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M10 4a6 6 0 1 0 3.94 10.56l4.25 4.25a1 1 0 0 0 1.42-1.42l-4.25-4.25A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+      <input matInput type="search" name="q" placeholder="Una parola del titolo…" formControlName="q" autocomplete="off" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="search__date">
+      <mat-label>Dal</mat-label>
+      <input matInput type="date" name="from" formControlName="from" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="search__date">
+      <mat-label>Al</mat-label>
+      <input matInput type="date" name="to" formControlName="to" />
+    </mat-form-field>
+
+    @if (filtersActive()) {
+    <button mat-button type="button" class="rf-button rf-button--tonal search__clear" (click)="onClear()">
+      Pulisci
+    </button>
+    }
+  </form>
+
   <div class="page__body">
-    <section class="entries" aria-label="Lista entries">  
-      <div class="entries__content">
-        @if (isLoading()) {
-        <ul class="entries-list entries-list--skeleton" aria-label="Caricamento" role="status">
-          @for (i of [1, 2, 3]; track i) {
-          <li class="entries-list__item">
-            <mat-card class="skeleton-card">
-              <mat-card-content>
-                <div class="skeleton-card__top">
-                  <div class="skeleton-line skeleton-line--date"></div>
-                  <div class="skeleton-line skeleton-line--badge"></div>
-                </div>
-                <div class="skeleton-line skeleton-line--text"></div>
-                <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
-              </mat-card-content>
-            </mat-card>
-          </li>
-          }
-        </ul>
-        } @else if (errorMessage()) {
-        <mat-card class="entries-empty" role="alert">
+    @if (isLoading()) {
+    <ul class="entries-list entries-list--skeleton" aria-label="Caricamento" role="status">
+      @for (i of [1, 2, 3]; track i) {
+      <li class="entries-list__item">
+        <mat-card class="skeleton-card">
           <mat-card-content>
-            <div class="entries-empty__title">Errore</div>
-            <div class="entries-empty__text">{{ errorMessage() }}</div>
-            <a class="entries-empty__cta rf-button rf-button--tonal" routerLink="/">Scrivi</a>
+            <div class="skeleton-line skeleton-line--date"></div>
+            <div class="skeleton-line skeleton-line--title"></div>
+            <div class="skeleton-line skeleton-line--text"></div>
+            <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
           </mat-card-content>
         </mat-card>
-        } @else if (entryPreviewList().length > 0) {
-        <ul class="entries-list" aria-label="Entries" role="list">
-          @for (ep of entryPreviewList(); track ep.id) {
-          <app-entry-card [entry]="ep" [link]="['/entries', ep.id]"></app-entry-card>
-          }
-        </ul>
+      </li>
+      }
+    </ul>
+    } @else if (errorMessage()) {
+    <mat-card class="state-card" role="alert">
+      <mat-card-content>
+        <div class="state-card__title">Qualcosa è andato storto</div>
+        <div class="state-card__text">{{ errorMessage() }}</div>
+        <a class="state-card__cta rf-button rf-button--tonal" routerLink="/">Scrivi una voce</a>
+      </mat-card-content>
+    </mat-card>
+    } @else if (entryPreviewList().length > 0) {
+    <p class="entries__count" aria-live="polite">
+      {{ total() }} {{ total() === 1 ? 'voce' : 'voci' }}{{ filtersActive() ? ' trovate' : '' }}
+    </p>
+    <ul class="entries-list" aria-label="Voci del diario" role="list">
+      @for (ep of entryPreviewList(); track ep.id) {
+      <app-entry-card [entry]="ep" [link]="['/entries', ep.id]"></app-entry-card>
+      }
+    </ul>
 
-        @if (hasMore()) {
-        <div class="entries__load-more">
-          <button
-            mat-stroked-button
-            class="rf-button rf-button--tonal"
-            type="button"
-            [disabled]="isLoadingMore()"
-            (click)="onLoadMore()"
-          >
-            {{ isLoadingMore() ? 'Carico...' : 'Carica altro' }}
-          </button>
-        </div>
-        }
-
-        } @else {
-        <mat-card class="entries-empty" role="note">
-          <mat-card-content>
-            <div class="entries-empty__title">Ancora nessuna entry</div>
-            <div class="entries-empty__text">Scrivi la prima entry e poi torna qui.</div>
-            <a class="entries-empty__cta rf-button rf-button--tonal" routerLink="/">Scrivi</a>
-          </mat-card-content>
-        </mat-card>
-
-        }
-      </div>
-    </section>
+    @if (hasMore()) {
+    <div class="entries__load-more">
+      <button
+        mat-stroked-button
+        class="rf-button rf-button--tonal"
+        type="button"
+        [disabled]="isLoadingMore()"
+        (click)="onLoadMore()"
+      >
+        {{ isLoadingMore() ? 'Carico…' : 'Carica altro' }}
+      </button>
+    </div>
+    }
+    } @else if (filtersActive()) {
+    <mat-card class="state-card" role="note">
+      <mat-card-content>
+        <div class="state-card__title">Nessun risultato</div>
+        <div class="state-card__text">Nessuna voce corrisponde alla ricerca. Prova a cambiare titolo o periodo.</div>
+        <button class="state-card__cta rf-button rf-button--tonal" type="button" (click)="onClear()">
+          Azzera la ricerca
+        </button>
+      </mat-card-content>
+    </mat-card>
+    } @else {
+    <mat-card class="state-card" role="note">
+      <mat-card-content>
+        <div class="state-card__title">Il diario è ancora vuoto</div>
+        <div class="state-card__text">Scrivi la tua prima voce e la ritroverai qui.</div>
+        <a class="state-card__cta rf-button rf-button--primary" routerLink="/">Scrivi la prima voce</a>
+      </mat-card-content>
+    </mat-card>
+    }
   </div>
 </section>

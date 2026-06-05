@@ -1,14 +1,16 @@
 # Reflecta
 
-Reflecta is a local‑first journaling app. You can save entries, request an analysis on demand, and keep everything on your own machine.
+Reflecta is a local‑first journaling app. Keep a private diary of titled, dated entries, search them by title or date, and store everything on your own machine.
 
 ## Features
 
-- Write and save entries (immutable, deletable)
-- Analysis on explicit request (never automatic)
-- Local SQLite storage (no cloud by default)
+- Write diary entries with a **title** and a **date** (the date defaults to today but is editable)
+- Browse your archive and re‑read any entry
+- **Search** by title and filter by a date range
+- Delete entries you no longer want
+- Local SQLite storage (fully offline — nothing leaves your machine)
 - Author ID stored locally in the browser
-- Angular Material 3 UI (calm‑tech, journal style)
+- Warm, editorial Angular Material (M3) UI with light/dark themes
 
 ## Tech Stack
 
@@ -32,13 +34,21 @@ npm -C apps/web install
 
 2) Configure the API environment
 
-Create `apps/api/.env`:
+Copy the example env file (or create `apps/api/.env`):
 
 ```bash
-DATABASE_URL="file:./db.sqlite3"
+cp apps/api/.env.example apps/api/.env
+# apps/api/.env
+# DATABASE_URL="file:./db.sqlite3"
 ```
 
-3) Start API + Web together
+3) Apply database migrations
+
+```bash
+npm -C apps/api run db:migrate
+```
+
+4) Start API + Web together
 
 ```bash
 node scripts/dev.mjs
@@ -75,14 +85,14 @@ Copy the printed ID and save it in **Settings**.
 ## API Endpoints (local)
 
 - `GET /health`
-- `GET /entries`
+- `GET /entries` — supports `?q=` (title search), `?from=` / `?to=` (date range, `YYYY-MM-DD`), `?authorId=`, `?page=`, `?limit=`
 - `GET /entries/:id`
-- `POST /entries`
-- `POST /analysis`
+- `POST /entries` — body: `{ authorId, title, date, content }`
 - `DELETE /entries/:id`
 
-## Security Notes
+## Security & Privacy Notes
 
+- Reflecta is offline by default: entries live only in your local SQLite database and are never sent anywhere.
 - Author ID is **not** authentication.
 - If the backend is exposed publicly, anyone with an Author ID could read data.
 - For safety, keep the app local unless you add real authentication.
@@ -92,4 +102,3 @@ Copy the printed ID and save it in **Settings**.
 - `apps/api` — Express + Prisma API
 - `apps/web` — Angular UI
 - `scripts/dev.mjs` — start API + Web together
-
