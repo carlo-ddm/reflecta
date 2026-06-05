@@ -3,13 +3,11 @@ import express, { Application } from 'express';
 
 // Routes
 import healthRouter from './routes/health.js';
-import analysisRouter from './routes/analysis.js';
 import entriesRouter from './routes/entries.js';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler.js';
 
 const app: Application = express();
 const healthRoute = healthRouter;
-const analysisRoute = analysisRouter;
 const entriesRoute = entriesRouter;
 
 const allowedMethods = ['GET', 'POST', 'DELETE', 'OPTIONS', 'HEAD'] as const;
@@ -110,7 +108,6 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: '50kb' }));
 app.use(healthRoute);
-app.use(analysisRoute);
 app.use(entriesRoute);
 app.use(notFoundHandler);
 app.use(errorHandler);

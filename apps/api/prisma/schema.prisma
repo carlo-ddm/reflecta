@@ -13,14 +13,6 @@ datasource db {
   provider = "sqlite"
 }
 
-enum AnalysisMetric {
-  MOOD
-  ENERGY
-  STRESS
-  FOCUS
-  CLARITY
-}
-
 model User {
   id       String  @id @default(ulid())
   name     String
@@ -30,28 +22,14 @@ model User {
 }
 
 model Entry {
-  id        String    @id @default(ulid())
-  author    User      @relation(fields: [authorId], references: [id])
+  id        String   @id @default(ulid())
+  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
+  date      DateTime @default(now())
+  title     String   @default("")
   content   String
   snippet   String
-  analysis  Analysis? 
-}
 
-model Analysis {
-  id        String        @id @default(ulid())
-  createdAt DateTime      @default(now())
-  entry     Entry         @relation(fields: [entryId], references: [id], onDelete: Cascade)
-  entryId   String        @unique
-  metrics   MetricScore[]
-}
-
-model MetricScore {
-  id         String         @id @default(ulid())
-  analysis   Analysis       @relation(fields: [analysisId], references: [id], onDelete: Cascade)
-  analysisId String
-  key        AnalysisMetric
-  score      Float
-  @@unique([analysisId, key])
+  @@index([authorId, date])
 }
