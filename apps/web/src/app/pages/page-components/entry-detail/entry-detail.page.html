@@ -1,129 +1,49 @@
 @if (isLoading()) {
 <section class="page">
   <div class="page__body">
-    <div class="entry-detail__layout">
-      <mat-card class="entry-detail">
-        <mat-card-content>
-          <div class="skeleton-block skeleton-block--meta"></div>
-          <div class="skeleton-block skeleton-block--text"></div>
-          <div class="skeleton-block skeleton-block--text skeleton-block--short"></div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+    <article class="entry-detail">
+      <div class="rf-skeleton skeleton--date"></div>
+      <div class="rf-skeleton skeleton--title"></div>
+      <div class="rf-skeleton skeleton--text"></div>
+      <div class="rf-skeleton skeleton--text skeleton--short"></div>
+    </article>
   </div>
 </section>
 } @else if (hasError()) {
 <section class="page">
   <div class="page__body">
-    <mat-card class="entry-detail-error" role="alert">
+    <mat-card class="state-card" role="alert">
       <mat-card-content>
-        <div class="entry-detail-error__title">Errore</div>
-        <div class="entry-detail-error__text">Impossibile caricare l'entry.</div>
-        <a class="entry-detail-error__cta rf-button rf-button--tonal" routerLink="/entries">
-          Torna alla lista
-        </a>
+        <div class="state-card__title">Voce non trovata</div>
+        <div class="state-card__text">Impossibile caricare questa voce del diario.</div>
+        <a class="state-card__cta rf-button rf-button--tonal" routerLink="/entries">Torna all'archivio</a>
       </mat-card-content>
     </mat-card>
   </div>
 </section>
 } @else {
-<section class="page">
-  <header class="page__header">
-    <div class="page__header-row">
-      <div class="page__actions">
-        <button
-          mat-button
-          class="rf-button rf-button--ghost"
-          type="button"
-          (click)="openDeleteDialog()"
-          [disabled]="isDeleting()"
-        >
-          {{ isDeleting() ? 'Elimino...' : 'Elimina' }}
-        </button>
-        <a mat-button class="rf-button rf-button--tonal" routerLink="/entries">
-          Torna alla lista dei tuoi scritti
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <div class="page__body">
-    <div class="entry-detail__layout">
-      <mat-card class="entry-detail" aria-label="Testo completo">
-        <mat-card-content>
-          <div class="entry-detail__header">
-            <div class="entry-detail__meta">
-              <time class="entry-detail__date" [attr.datetime]="entry()?.createdAt">
-                {{ entry()?.createdAt | date : 'longDate' }}
-              </time>
-              <span class="entry-detail__separator" aria-hidden="true">-</span>
-              <time class="entry-detail__time" [attr.datetime]="entry()?.createdAt">
-                {{ entry()?.createdAt | date : 'HH:mm' }}
-              </time>
-              <span class="entry-detail__dot" aria-hidden="true"></span>
-            </div>
-            <app-badge [hasAnalysis]="hasAnalysis()" />
-          </div>
-
-          <div class="entry-detail__text">
-            <p>
-              {{ entry()?.content || entry()?.snippet }}
-            </p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      @if (hasAnalysis()) {
-      <mat-card class="entry-analysis" aria-label="Analisi">
-        <mat-card-content>
-          <header class="entry-analysis__header">
-            <h2 class="entry-analysis__title">Analisi</h2>
-            <p class="entry-analysis__subtitle">Valori calcolati al momento del salvataggio.</p>
-          </header>
-
-          <div class="analysis-profile" aria-label="Profilo di analisi">
-            <div class="analysis-profile__grid" role="list">
-              @for (metric of analysisMetrics(); track metric.key) {
-              <div class="analysis-metric" role="listitem">
-                <div class="analysis-metric__label">{{ metric.label }}</div>
-                <div class="analysis-metric__value">
-                  {{ metric.value === null ? '--' : metric.value }}
-                </div>
-                <div class="analysis-metric__bar" aria-hidden="true">
-                  <span [style.--pct]="metric.pct === null ? '0%' : metric.pct + '%'"> </span>
-                </div>
-              </div>
-              }
-            </div>
-
-            <div class="analysis-chart" aria-label="Grafico radar delle metriche">
-              <svg class="analysis-chart__svg" viewBox="0 0 200 200" aria-hidden="true">
-                <polygon class="analysis-chart__grid" points="100,10 185,55 171,150 29,150 15,55" />
-                <polygon class="analysis-chart__grid" points="100,37 159,66 148,132 52,132 41,66" />
-                <polygon class="analysis-chart__grid" points="100,64 133,78 126,113 74,113 67,78" />
-                @if (radarPoints()) {
-                <polygon class="analysis-chart__data" [attr.points]="radarPoints()" />
-                }
-                @for (metric of analysisMetrics(); track metric.key; let i = $index) {
-                <line class="analysis-chart__axis"
-                  x1="100" y1="100"
-                  [attr.x2]="radarAxes()[i]?.x" [attr.y2]="radarAxes()[i]?.y" />
-                }
-              </svg>
-              <div class="analysis-chart__labels" aria-hidden="true">
-                @for (metric of analysisMetrics(); track metric.key) {
-                <span class="analysis-chart__label">{{ metric.label }}</span>
-                }
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      } @else {
-
-      }
-    </div>
+<section class="page entry-detail-page">
+  <div class="entry-detail__toolbar">
+    <a mat-button class="rf-button rf-button--tonal" routerLink="/entries">← Archivio</a>
+    <button
+      mat-button
+      class="rf-button rf-button--ghost"
+      type="button"
+      (click)="openDeleteDialog()"
+      [disabled]="isDeleting()"
+    >
+      {{ isDeleting() ? 'Elimino…' : 'Elimina' }}
+    </button>
   </div>
+
+  <article class="entry-detail" aria-label="Voce del diario">
+    <header class="entry-detail__head">
+      <time class="entry-detail__date" [attr.datetime]="entry()?.date">
+        {{ entry()?.date | date: 'EEEE d MMMM y' }}
+      </time>
+      <h1 class="entry-detail__title">{{ entry()?.title || 'Senza titolo' }}</h1>
+    </header>
+    <div class="entry-detail__text">{{ entry()?.content || entry()?.snippet }}</div>
+  </article>
 </section>
 }

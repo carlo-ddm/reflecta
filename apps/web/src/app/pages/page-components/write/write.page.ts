@@ -1,27 +1,32 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { PageService } from '../../services/page.service';
 import { getAuthorId } from '../../../config/api.config';
-import { AnalysisDialog } from './analysis-dialog.ui';
+
+const todayLocalIso = (): string => {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+};
 
 @Component({
   selector: 'app-write',
   imports: [
     MatButtonModule,
     MatCardModule,
-    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
     ReactiveFormsModule,
+    RouterLink,
   ],
   templateUrl: './write.page.html',
   styleUrl: './write.page.scss',
@@ -30,18 +35,33 @@ import { AnalysisDialog } from './analysis-dialog.ui';
 export class WritePage {
   private router = inject(Router);
   private pageService = inject(PageService);
-  private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
-  form = new FormGroup({
-    ['entry-text']: new FormControl(''),
-  });
+
+  readonly MAX_CONTENT_LENGTH = 5000;
+  readonly MAX_TITLE_LENGTH = 120;
+
   authorId = signal<string>(getAuthorId());
   isSubmitting = signal(false);
-  readonly MAX_CONTENT_LENGTH = 5000;
+
+  form = new FormGroup({
+    title: new FormControl('', { nonNullable: true }),
+    date: new FormControl(todayLocalIso(), {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    content: new FormControl('', { nonNullable: true }),
+  });
+
+  get titleValue(): string {
+    return (this.form.controls.title.value ?? '').trim();
+  }
+
+  get contentValue(): string {
+    return (this.form.controls.content.value ?? '').trim();
+  }
 
   get charCount(): number {
-    const value = this.form.get('entry-text')?.value ?? '';
-    return String(value).trim().length;
+    return this.contentValue.length;
   }
 
   get isOverLimit(): boolean {
@@ -52,8 +72,8 @@ export class WritePage {
     return this.charCount > this.MAX_CONTENT_LENGTH * 0.9;
   }
 
-  get hasContent(): boolean {
-    return this.charCount > 0;
+  get isTitleOverLimit(): boolean {
+    return this.titleValue.length > this.MAX_TITLE_LENGTH;
   }
 
   get hasAuthorId(): boolean {
@@ -61,104 +81,58 @@ export class WritePage {
   }
 
   get canSubmit(): boolean {
-    return this.hasContent && this.hasAuthorId && !this.isOverLimit && !this.isSubmitting();
-  }
-
-  openAnalysisDialog() {
-    if (!this.hasContent || !this.hasAuthorId) return;
-
-    const dialogRef = this.dialog.open(AnalysisDialog, {
-      panelClass: 'rf-dialog',
-      autoFocus: false,
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (confirmed) {
-        this.onSubmitAnalysis();
-      }
-    });
+    return (
+      Boolean(this.titleValue) &&
+      Boolean(this.contentValue) &&
+      Boolean(this.form.controls.date.value) &&
+      this.hasAuthorId &&
+      !this.isOverLimit &&
+      !this.isTitleOverLimit &&
+      !this.isSubmitting()
+    );
   }
 
   onSubmit() {
-    const rawContent = this.form.get('entry-text')?.value ?? '';
-    const content = String(rawContent).trim();
+    const title = this.titleValue;
+    const content = this.contentValue;
+    const date = this.form.controls.date.value;
+
+    const authorId = getAuthorId().trim();
+    this.authorId.set(authorId);
+
+    if (!authorId) {
+      this.showSnack('Imposta l\'Author ID nelle Impostazioni.', 'warn');
+      return;
+    }
+
+    if (!title) {
+      this.showSnack('Dai un titolo a questa voce.', 'warn');
+      return;
+    }
 
     if (!content) {
       this.showSnack('Scrivi qualcosa prima di salvare.', 'warn');
       return;
     }
 
-    const authorId = getAuthorId().trim();
-    this.authorId.set(authorId);
-
-    if (!authorId) {
-      this.showSnack('Imposta l\'Author ID nelle impostazioni.', 'warn');
-      return;
-    }
-
     this.isSubmitting.set(true);
 
     firstValueFrom(
-      this.pageService.createEntry({
-        authorId,
-        content,
-      }),
+      this.pageService.createEntry({ authorId, title, date, content }),
     )
       .then(() => {
-        this.form.reset();
-        this.showSnack('Entry salvata con successo.', 'success', 'Vai a Entries');
+        this.form.reset({ title: '', date: todayLocalIso(), content: '' });
+        this.showSnack('Voce salvata nel diario.', 'success', 'Apri l\'archivio');
       })
       .catch(() => {
-        this.showSnack('Impossibile salvare l\'entry.', 'danger');
+        this.showSnack('Impossibile salvare la voce.', 'danger');
       })
       .finally(() => {
         this.isSubmitting.set(false);
       });
   }
 
-  onSubmitAnalysis() {
-    const rawContent = this.form.get('entry-text')?.value ?? '';
-    const content = String(rawContent).trim();
-
-    if (!content) {
-      this.showSnack('Scrivi qualcosa prima di analizzare.', 'warn');
-      return;
-    }
-
-    const authorId = getAuthorId().trim();
-    this.authorId.set(authorId);
-
-    if (!authorId) {
-      this.showSnack('Imposta l\'Author ID nelle impostazioni.', 'warn');
-      return;
-    }
-
-    this.isSubmitting.set(true);
-
-    firstValueFrom(
-      this.pageService.createEntry({
-        authorId,
-        content,
-        analyze: true,
-      }),
-    )
-      .then(() => {
-        this.form.reset();
-        this.showSnack('Entry salvata con analisi.', 'success', 'Vai a Entries');
-      })
-      .catch(() => {
-        this.showSnack('Impossibile completare l\'analisi.', 'danger');
-      })
-      .finally(() => {
-        this.isSubmitting.set(false);
-      });
-  }
-
-  private showSnack(
-    message: string,
-    tone: 'success' | 'warn' | 'danger',
-    action?: string,
-  ) {
+  private showSnack(message: string, tone: 'success' | 'warn' | 'danger', action?: string) {
     const ref = this.snackBar.open(message, action, {
       duration: action ? 5000 : 3500,
       panelClass: ['rf-snackbar', `rf-snackbar--${tone}`],

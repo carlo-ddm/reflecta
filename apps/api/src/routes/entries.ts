@@ -1,19 +1,34 @@
 import express, { Router } from 'express';
-import { createAnalysis } from '../analysis.repository.js';
-import { computeMetrics } from '../analysis.utils.js';
 import { toEntryDetailDto, toEntryListItemDto } from '../dtos/entry.dto.js';
 import { createEntry, deleteEntryById, getEntries, getEntryById } from '../entry.repository.js';
 import { HttpError } from '../middlewares/error-handler.js';
-import { AnalysisMetric } from '../../generated/prisma/enums.js';
 
 const entriesRouter: Router = express.Router();
-const allowedMetricKeys = new Set(Object.values(AnalysisMetric));
 const MAX_CONTENT_LENGTH = 5000;
 const MAX_SNIPPET_LENGTH = 240;
+const MAX_TITLE_LENGTH = 120;
+const MAX_QUERY_LENGTH = 120;
 
 const isNonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
 const isValidUlid = (value: string) => /^[0-9A-HJKMNP-TV-Z]{26}$/i.test(value);
-const isValidScore = (value: number) => value >= 0 && value <= 1;
+const isDateOnly = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+
+// Parse a date query parameter. Date-only strings ("YYYY-MM-DD") are expanded to
+// the start or end of that local day so range filters are inclusive.
+// Returns: undefined when absent, null when present-but-invalid, otherwise a Date.
+const parseDateParam = (value: unknown, endOfDay: boolean): Date | null | undefined => {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    return undefined;
+  }
+
+  const raw = value.trim();
+  const normalized = isDateOnly(raw)
+    ? `${raw}T${endOfDay ? '23:59:59.999' : '00:00:00.000'}`
+    : raw;
+  const parsed = new Date(normalized);
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
 
 entriesRouter.get('/entries', async (req, res, next) => {
   try {
@@ -22,12 +37,25 @@ entriesRouter.get('/entries', async (req, res, next) => {
       return next(new HttpError(400, 'authorId is invalid'));
     }
 
+    const rawQuery = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+    const query = rawQuery ? rawQuery.slice(0, MAX_QUERY_LENGTH) : undefined;
+
+    const dateFrom = parseDateParam(req.query.from, false);
+    if (dateFrom === null) {
+      return next(new HttpError(400, 'from is invalid'));
+    }
+
+    const dateTo = parseDateParam(req.query.to, true);
+    if (dateTo === null) {
+      return next(new HttpError(400, 'to is invalid'));
+    }
+
     const rawPage = Number(req.query.page);
     const rawLimit = Number(req.query.limit);
     const page = Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
     const limit = Number.isFinite(rawLimit) && rawLimit >= 1 && rawLimit <= 100 ? Math.floor(rawLimit) : 20;
 
-    const result = await getEntries({ authorId, page, limit });
+    const result = await getEntries({ authorId, query, dateFrom, dateTo, page, limit });
 
     res.status(200).json({
       data: result.data.map(toEntryListItemDto),
@@ -69,7 +97,7 @@ entriesRouter.post('/entries', async (req, res, next) => {
     return next(new HttpError(400, 'Invalid JSON body'));
   }
 
-  const { authorId, content, snippet, analysis, analyze } = body as Record<string, unknown>;
+  const { authorId, content, title, date, snippet } = body as Record<string, unknown>;
 
   if (!isNonEmptyString(authorId)) {
     return next(new HttpError(400, 'authorId is required'));
@@ -91,74 +119,42 @@ entriesRouter.post('/entries', async (req, res, next) => {
     return next(new HttpError(400, `content exceeds ${MAX_CONTENT_LENGTH} characters`));
   }
 
+  if (title !== undefined && typeof title !== 'string') {
+    return next(new HttpError(400, 'title must be a string'));
+  }
+
+  const normalizedTitle = isNonEmptyString(title) ? title.trim().slice(0, MAX_TITLE_LENGTH) : '';
+
+  let normalizedDate = new Date();
+  if (date !== undefined) {
+    if (typeof date !== 'string') {
+      return next(new HttpError(400, 'date must be an ISO date string'));
+    }
+    const parsed = parseDateParam(date, false);
+    if (!parsed) {
+      return next(new HttpError(400, 'date is invalid'));
+    }
+    normalizedDate = parsed;
+  }
+
+  if (snippet !== undefined && typeof snippet !== 'string') {
+    return next(new HttpError(400, 'snippet must be a string'));
+  }
+
   const normalizedSnippet = isNonEmptyString(snippet)
     ? snippet.trim().slice(0, MAX_SNIPPET_LENGTH)
     : normalizedContent.slice(0, MAX_SNIPPET_LENGTH);
 
-  let normalizedMetrics: Array<{ key: AnalysisMetric; score: number }> | null = null;
-
-  if (analyze === true) {
-    normalizedMetrics = computeMetrics(normalizedContent);
-  } else if (analysis !== undefined) {
-    if (!analysis || typeof analysis !== 'object') {
-      return next(new HttpError(400, 'analysis must be an object'));
-    }
-
-    const { metrics } = analysis as Record<string, unknown>;
-
-    if (!Array.isArray(metrics) || metrics.length === 0) {
-      return next(new HttpError(400, 'analysis.metrics must be a non-empty array'));
-    }
-
-    const mappedMetrics = metrics.map((metric) => {
-      if (!metric || typeof metric !== 'object') {
-        return null;
-      }
-
-      const { key, score } = metric as Record<string, unknown>;
-
-      if (typeof key !== 'string' || !allowedMetricKeys.has(key as AnalysisMetric)) {
-        return null;
-      }
-
-      if (typeof score !== 'number' || Number.isNaN(score)) {
-        return null;
-      }
-
-      if (!isValidScore(score)) {
-        return null;
-      }
-
-      return { key: key as AnalysisMetric, score };
-    });
-
-    if (mappedMetrics.some((metric) => metric === null)) {
-      return next(new HttpError(400, 'Invalid analysis.metrics item'));
-    }
-
-    normalizedMetrics = mappedMetrics as Array<{ key: AnalysisMetric; score: number }>;
-  }
-
   try {
     const entry = await createEntry({
       authorId: normalizedAuthorId,
+      title: normalizedTitle,
+      date: normalizedDate,
       content: normalizedContent,
       snippet: normalizedSnippet,
     });
 
-    const createdAnalysis = normalizedMetrics
-      ? await createAnalysis({
-          entryId: entry.id,
-          metrics: normalizedMetrics,
-        })
-      : null;
-
-    res.status(201).json(
-      toEntryDetailDto({
-        ...entry,
-        analysis: createdAnalysis,
-      }),
-    );
+    res.status(201).json(toEntryDetailDto(entry));
   } catch (error) {
     next(error);
   }

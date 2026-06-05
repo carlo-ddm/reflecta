@@ -2,6 +2,8 @@ import { prisma } from './prisma.js';
 
 export interface CreateEntryInput {
   authorId: string;
+  title: string;
+  date: Date;
   content: string;
   snippet: string;
 }
@@ -10,6 +12,8 @@ export async function createEntry(input: CreateEntryInput) {
   return prisma.entry.create({
     data: {
       authorId: input.authorId,
+      title: input.title,
+      date: input.date,
       content: input.content,
       snippet: input.snippet,
     },
@@ -18,29 +22,51 @@ export async function createEntry(input: CreateEntryInput) {
 
 export interface GetEntriesOptions {
   authorId?: string;
+  query?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
   page?: number;
   limit?: number;
 }
 
 export async function getEntries(options: GetEntriesOptions = {}) {
-  const { authorId, page = 1, limit = 20 } = options;
-  const where = authorId ? { authorId } : {};
+  const { authorId, query, dateFrom, dateTo, page = 1, limit = 20 } = options;
+
+  const where: {
+    authorId?: string;
+    title?: { contains: string };
+    date?: { gte?: Date; lte?: Date };
+  } = {};
+
+  if (authorId) {
+    where.authorId = authorId;
+  }
+
+  if (query) {
+    where.title = { contains: query };
+  }
+
+  if (dateFrom || dateTo) {
+    where.date = {};
+    if (dateFrom) where.date.gte = dateFrom;
+    if (dateTo) where.date.lte = dateTo;
+  }
+
   const skip = (page - 1) * limit;
 
   const [data, total] = await Promise.all([
     prisma.entry.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
       skip,
       take: limit,
       select: {
         id: true,
-        createdAt: true,
-        snippet: true,
         authorId: true,
-        analysis: {
-          select: { id: true },
-        },
+        createdAt: true,
+        date: true,
+        title: true,
+        snippet: true,
       },
     }),
     prisma.entry.count({ where }),
@@ -52,11 +78,6 @@ export async function getEntries(options: GetEntriesOptions = {}) {
 export async function getEntryById(id: string) {
   return prisma.entry.findUnique({
     where: { id },
-    include: {
-      analysis: {
-        include: { metrics: true },
-      },
-    },
   });
 }
 

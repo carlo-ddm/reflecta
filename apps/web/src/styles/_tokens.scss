@@ -1,30 +1,32 @@
 :root {
   color-scheme: light;
 
-  --bg: #f7f6f3;
-  --fg: #14181f;
-  --muted: #5a6472;
-  --surface: #ffffff;
-  --surface-2: #f1f0ec;
-  --border: #e2e0da;
-  --accent: #2b8a7a;
-  --accent-contrast: #ffffff;
-  --success: #16a34a;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  /* Warm "paper" palette — editorial diary */
+  --bg: #f4f1ea;
+  --fg: #2b2620;
+  --muted: #7c7165;
+  --surface: #fcfaf5;
+  --surface-2: #eee9de;
+  --border: #e4ddce;
+  --accent: #b85c38;
+  --accent-soft: #c98a2b;
+  --accent-contrast: #fdf8f1;
+  --success: #5e8c61;
+  --warning: #c98a2b;
+  --danger: #b23a3a;
   --bg-gradient: radial-gradient(
-      1200px 600px at -10% -20%,
+      1100px 560px at -8% -18%,
       color-mix(in srgb, var(--accent) 12%, transparent),
-      transparent 60%
+      transparent 58%
     ),
     radial-gradient(
-      900px 500px at 110% -20%,
-      color-mix(in srgb, var(--accent) 8%, transparent),
+      900px 520px at 112% -12%,
+      color-mix(in srgb, var(--accent-soft) 12%, transparent),
       transparent 55%
     ),
     var(--bg);
 
-  --focus: color-mix(in srgb, var(--accent) 38%, transparent);
+  --focus: color-mix(in srgb, var(--accent) 40%, transparent);
 
   --s-1: 4px;
   --s-2: 8px;
@@ -37,30 +39,33 @@
   --r-1: 8px;
   --r-2: 12px;
   --r-3: 16px;
+  --r-4: 22px;
   --r-pill: 999px;
 
-  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.08);
-  --sh-2: 0 6px 16px rgba(0, 0, 0, 0.1);
+  --sh-1: 0 1px 2px rgba(60, 42, 24, 0.07);
+  --sh-2: 0 12px 30px rgba(60, 42, 24, 0.12);
 
-  --t-fast: 120ms;
+  --t-fast: 140ms;
+  --t-med: 240ms;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --fs-1: 12px;
   --fs-2: 14px;
   --fs-3: 16px;
   --fs-4: 20px;
-  --fs-5: 24px;
-  --fs-6: 32px;
+  --fs-5: 26px;
+  --fs-6: 36px;
 
-  --lh-tight: 1.2;
-  --lh: 1.45;
-  --lh-loose: 1.65;
+  --lh-tight: 1.15;
+  --lh: 1.5;
+  --lh-loose: 1.75;
 
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
 
-  --container-width: 1040px;
+  --container-width: 980px;
+  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   --font-sans: 'Source Sans 3', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
   /* Legacy aliases for existing styles */
@@ -74,33 +79,39 @@
 .dark {
   color-scheme: dark;
 
-  --bg: #0e1116;
-  --fg: #e7edf5;
-  --muted: #a9b4c3;
-  --surface: #151a22;
-  --surface-2: #10151d;
-  --border: #2a3240;
-  --accent: #2dd4bf;
-  --accent-contrast: #06211d;
-  --success: #22c55e;
-  --warning: #fbbf24;
-  --danger: #f87171;
+  /* Warm "night" palette — same paper feel, dimmed for evenings */
+  --bg: #17130f;
+  --fg: #ece3d5;
+  --muted: #a99c8b;
+  --surface: #211b15;
+  --surface-2: #1b1611;
+  --border: #392f26;
+  --accent: #e08a5b;
+  --accent-soft: #e0ae5a;
+  --accent-contrast: #241409;
+  --success: #7fb07a;
+  --warning: #e0ae5a;
+  --danger: #e0796b;
   --bg-gradient: radial-gradient(
-      1200px 600px at -10% -20%,
-      color-mix(in srgb, var(--accent) 14%, transparent),
-      transparent 60%
+      1100px 560px at -8% -18%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 58%
     ),
     radial-gradient(
-      900px 500px at 110% -20%,
-      color-mix(in srgb, var(--accent) 10%, transparent),
+      900px 520px at 112% -12%,
+      color-mix(in srgb, var(--accent-soft) 12%, transparent),
       transparent 55%
     ),
     var(--bg);
+
+  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sh-2: 0 14px 34px rgba(0, 0, 0, 0.5);
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
     --t-fast: 1ms;
+    --t-med: 1ms;
   }
 
   * {
